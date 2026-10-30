@@ -53,7 +53,7 @@ input[type=color]{height:52px;padding:5px}
 .welcome{text-align:center;padding:25px 10px}
 .welcome .heart{font-size:45px;margin-bottom:12px}
 .welcome h2{font-size:25px}
-.chatArea{height:390px;overflow-y:auto;display:flex;flex-direction:column;gap:12px;padding:12px 3px;border-radius:12px;transition:background .2s}
+.chatArea{height:390px;overflow-y:auto;display:flex;flex-direction:column;gap:12px;padding:12px 3px;border-radius:12px;transition:background .2s;background-size:cover;background-position:center;background-repeat:no-repeat}
 .message{max-width:82%;padding:12px 15px;border-radius:17px;background:#2a202a;align-self:flex-start;overflow-wrap:anywhere}
 .message.mine{background:linear-gradient(135deg,#7c1937,#c5254d);align-self:flex-end}
 .message .sender{font-size:10px;color:#ffc2d0;margin-bottom:5px}
@@ -68,11 +68,17 @@ input[type=color]{height:52px;padding:5px}
 .fileInput{margin:12px 0;font-size:12px}
 .player{text-align:center;padding:22px;background:linear-gradient(145deg,#411426,#170e19);border-radius:18px}
 .playerIcon{font-size:55px;margin-bottom:12px}
-#wallpaperPreview{height:75px;border-radius:12px;background:linear-gradient(135deg,#270d20,#721a36);margin:12px 0}
+#wallpaperPreview{height:125px;border-radius:12px;background:linear-gradient(135deg,#270d20,#721a36);margin:12px 0;background-size:cover;background-position:center;border:1px solid var(--border)}
 .status{font-size:12px;color:#e77a95;margin-top:8px;overflow-wrap:anywhere}
 .inviteCode{font-size:25px;letter-spacing:4px;color:#ff8099;font-weight:bold;margin:15px 0;overflow-wrap:anywhere}
 .empty{font-size:13px;color:var(--muted);padding:12px;text-align:center}
 footer{text-align:center;padding:25px;color:#786b75;font-size:11px}
+.mediaActions{display:flex;gap:8px;margin-top:10px}
+.mediaActions button{flex:1;margin-top:0}
+#photoViewer{position:fixed;inset:0;background:#050407f5;z-index:1000;display:none;align-items:center;justify-content:center;padding:15px}
+#photoViewer.open{display:flex}
+#photoViewer img{max-width:100%;max-height:88vh;object-fit:contain;border-radius:12px}
+#photoViewer button{position:absolute;top:20px;right:20px;background:#a91035;color:white;border:0;border-radius:50%;width:45px;height:45px;font-size:25px}
 @media(min-width:600px){main{padding-top:28px}#authScreen{margin-top:90px}}
 </style>
 </head>
@@ -216,8 +222,12 @@ footer{text-align:center;padding:25px;color:#786b75;font-size:11px}
     <h2>Our space settings ⚙️</h2>
     <h3>Shared chat wallpaper</h3>
     <div id="wallpaperPreview"></div>
+    <p class="small">Choose a colour or upload a photo to share as your wallpaper.</p>
     <input type="color" id="wallpaperColor" value="#270d20">
-    <button class="btn full" onclick="saveWallpaper()">CHANGE WALLPAPER</button>
+    <button class="btn full" onclick="saveWallpaper()">USE COLOUR</button>
+    <input type="file" id="wallpaperFile" accept="image/*" class="fileInput">
+    <button class="btn secondary full" onclick="uploadWallpaper()">USE PHOTO AS WALLPAPER</button>
+    <button class="btn secondary full" onclick="removePhotoWallpaper()">REMOVE PHOTO WALLPAPER</button>
     <p id="settingsStatus" class="status"></p>
    </div>
    <div class="card">
@@ -229,12 +239,17 @@ footer{text-align:center;padding:25px;color:#786b75;font-size:11px}
  </main>
 </section>
 
+<div id="photoViewer" onclick="closePhotoViewer()">
+ <button onclick="closePhotoViewer()">×</button>
+ <img id="fullPhoto" alt="Full-screen shared photo">
+</div>
+
 <footer>Made with ❤️ for two hearts, one universe.</footer>
 
 <script>
 "use strict";
 
-/* YOUR EXISTING SUPABASE PROJECT */
+/* SUPABASE PROJECT */
 const SUPABASE_URL="https://oiwmbgszcesiflpjooap.supabase.co";
 const SUPABASE_KEY="sb_publishable_OiquM_qONAjwK5khLen1Tw_7GEvFe53";
 
@@ -526,61 +541,119 @@ async function uploadMedia(type){
  if(spaceChannel)spaceChannel.send({type:"broadcast",event:"media-added",payload:{senderId:currentUser.id}});
 }
 
+/* LOAD MEDIA AND BUILD CARDS */
 async function loadMedia(){
  if(!currentUser||!coupleId)return;
+
  const {data,error}=await sb.from("love_media")
   .select("id,type,path,name,created_at")
-  .eq("couple_id",coupleId).order("created_at",{ascending:false}).limit(100);
+  .eq("couple_id",coupleId)
+  .order("created_at",{ascending:false}).limit(100);
+
  if(error){
   ["musicList","photoList","videoList"].forEach(id=>$(id).textContent="Media error: "+error.message);
   return;
  }
+
  $("musicList").replaceChildren();
  $("photoList").replaceChildren();
  $("videoList").replaceChildren();
  mediaElements.clear();
 
  const counts={music:0,photo:0,video:0};
+
  for(const item of data||[]){
-  const bucket=item.type==="music"?"love-music":item.type==="photo"?"love-photos":"love-videos";
-  const {data:urlData,error:urlError}=await sb.storage.from(bucket).createSignedUrl(item.path,3600);
+  const bucket=item.type==="music"?"love-music":
+   item.type==="photo"?"love-photos":"love-videos";
+
+  const {data:urlData,error:urlError}=await sb.storage
+   .from(bucket).createSignedUrl(item.path,3600);
+
   if(urlError)continue;
 
   const card=document.createElement("div");
   card.className="mediaItem";
+
   const title=document.createElement("p");
   title.textContent=item.name||"Shared memory";
   card.appendChild(title);
 
   if(item.type==="music"){
    const audio=document.createElement("audio");
-   audio.controls=true;audio.preload="metadata";audio.src=urlData.signedUrl;
+   audio.controls=true;
+   audio.preload="metadata";
+   audio.src=urlData.signedUrl;
    audio.dataset.mediaId=item.id;
    card.appendChild(audio);
-   $("musicList").appendChild(card);
    mediaElements.set(item.id,audio);
    attachPlaybackSync(audio,item.id);
+   $("musicList").appendChild(card);
    counts.music++;
   }else if(item.type==="photo"){
    const img=document.createElement("img");
-   img.src=urlData.signedUrl;img.alt=item.name||"Shared photo";
+   img.src=urlData.signedUrl;
+   img.alt=item.name||"Shared photo";
+   img.style.cursor="zoom-in";
+   img.onclick=()=>openPhotoViewer(urlData.signedUrl);
    card.appendChild(img);
    $("photoList").appendChild(card);
    counts.photo++;
   }else if(item.type==="video"){
    const video=document.createElement("video");
-   video.controls=true;video.playsInline=true;video.preload="metadata";
-   video.src=urlData.signedUrl;video.dataset.mediaId=item.id;
+   video.controls=true;
+   video.playsInline=true;
+   video.preload="metadata";
+   video.src=urlData.signedUrl;
+   video.dataset.mediaId=item.id;
    card.appendChild(video);
-   $("videoList").appendChild(card);
    mediaElements.set(item.id,video);
    attachPlaybackSync(video,item.id);
+   $("videoList").appendChild(card);
    counts.video++;
   }
+
+  const actions=document.createElement("div");
+  actions.className="mediaActions";
+  const del=document.createElement("button");
+  del.className="btn secondary";
+  del.textContent="🗑 DELETE";
+  del.onclick=()=>deleteMedia(item);
+  actions.appendChild(del);
+  card.appendChild(actions);
  }
+
  if(!counts.music)$("musicList").innerHTML='<p class="empty">No songs shared yet.</p>';
  if(!counts.photo)$("photoList").innerHTML='<p class="empty">No photos shared yet.</p>';
  if(!counts.video)$("videoList").innerHTML='<p class="empty">No videos shared yet.</p>';
+}
+
+/* DELETE MEDIA */
+async function deleteMedia(item){
+ const confirmed=confirm("Delete "+(item.name||"this memory")+" permanently for both of you?");
+ if(!confirmed)return;
+
+ const bucket=item.type==="music"?"love-music":
+  item.type==="photo"?"love-photos":"love-videos";
+
+ try{
+  const {error:storageError}=await sb.storage.from(bucket).remove([item.path]);
+  if(storageError)throw storageError;
+
+  const {error:rowError}=await sb.from("love_media")
+   .delete().eq("id",item.id).eq("couple_id",coupleId);
+
+  if(rowError)throw rowError;
+
+  say("settingsStatus","Memory deleted successfully.");
+  await loadMedia();
+
+  if(spaceChannel)spaceChannel.send({
+   type:"broadcast",event:"media-deleted",
+   payload:{senderId:currentUser.id}
+  });
+ }catch(e){
+  alert("Could not delete this memory: "+errorText(e));
+ }
 }
 
 /* SYNCHRONIZED MUSIC AND VIDEO */
@@ -634,16 +707,19 @@ async function receivePlayback(payload){
 /* SPACE REALTIME CHANNEL */
 function subscribeSpace(){
  if(spaceChannel)sb.removeChannel(spaceChannel);
+
  spaceChannel=sb.channel("love-space-"+coupleId)
   .on("broadcast",{event:"playback"},({payload})=>receivePlayback(payload))
   .on("broadcast",{event:"wallpaper"},({payload})=>{
-   if(payload?.senderId!==currentUser.id){
-    $("wallpaperColor").value=payload.color;
-    applyWallpaper(payload.color);
+   if(payload?.senderId!==currentUser.id&&payload?.value){
+    showWallpaper(payload.value);
     say("settingsStatus","Your partner changed the shared wallpaper ❤️");
    }
   })
   .on("broadcast",{event:"media-added"},({payload})=>{
+   if(payload?.senderId!==currentUser.id)loadMedia();
+  })
+  .on("broadcast",{event:"media-deleted"},({payload})=>{
    if(payload?.senderId!==currentUser.id)loadMedia();
   })
   .on("broadcast",{event:"member-joined"},()=>checkPartner())
@@ -657,33 +733,164 @@ function subscribeSpace(){
   });
 }
 
+/* PHOTO VIEWER */
+function openPhotoViewer(url){
+ $("fullPhoto").src=url;
+ $("photoViewer").classList.add("open");
+ document.body.style.overflow="hidden";
+}
+
+function closePhotoViewer(){
+ $("photoViewer").classList.remove("open");
+ $("fullPhoto").src="";
+ document.body.style.overflow="";
+}
+
+$("photoViewer").querySelector("img").addEventListener("click",e=>e.stopPropagation());
+
+document.addEventListener("keydown",e=>{
+ if(e.key==="Escape")closePhotoViewer();
+});
+
 /* SHARED WALLPAPER */
-function applyWallpaper(color){
- $("wallpaperPreview").style.background=color;
- $("chatMessages").style.background=color;
+function applyWallpaper(value){
+ const preview=$("wallpaperPreview");
+ const chat=$("chatMessages");
+
+ if(value.startsWith("photo:")){
+  const url=value.substring(6);
+  preview.style.backgroundImage=`url("${url}")`;
+  chat.style.backgroundImage=`url("${url}")`;
+  preview.style.backgroundColor="#270d20";
+  chat.style.backgroundColor="#270d20";
+  preview.style.backgroundSize="cover";
+  chat.style.backgroundSize="cover";
+  preview.style.backgroundPosition="center";
+  chat.style.backgroundPosition="center";
+ }else{
+  preview.style.backgroundImage="none";
+  chat.style.backgroundImage="none";
+  preview.style.backgroundColor=value;
+  chat.style.backgroundColor=value;
+  $("wallpaperColor").value=value;
+ }
+}
+
+async function showWallpaper(value){
+ if(value.startsWith("photo:")){
+  const path=value.substring(6);
+  const {data,error}=await sb.storage.from("love-photos")
+   .createSignedUrl(path,3600);
+  if(error){
+   say("settingsStatus","Could not load wallpaper: "+error.message);
+   return;
+  }
+  applyWallpaper("photo:"+data.signedUrl);
+ }else{
+  applyWallpaper(value);
+ }
 }
 
 async function loadWallpaper(){
  const {data,error}=await sb.from("love_settings")
   .select("wallpaper").eq("couple_id",coupleId).maybeSingle();
+
  if(error){say("settingsStatus",errorText(error));return}
- const color=data?.wallpaper||"#270d20";
- $("wallpaperColor").value=color;
- applyWallpaper(color);
+
+ const value=data?.wallpaper||"#270d20";
+ await showWallpaper(value);
 }
 
 async function saveWallpaper(){
  const color=$("wallpaperColor").value;
  say("settingsStatus","Saving shared wallpaper...");
+
+ const {data:oldData}=await sb.from("love_settings")
+  .select("wallpaper").eq("couple_id",coupleId).maybeSingle();
+
+ const oldWallpaper=oldData?.wallpaper||"";
+
  const {error}=await sb.from("love_settings").upsert({
-  couple_id:coupleId,wallpaper:color,updated_at:new Date().toISOString()
+  couple_id:coupleId,wallpaper:color,
+  updated_at:new Date().toISOString()
  },{onConflict:"couple_id"});
+
  if(error){say("settingsStatus",errorText(error));return}
+
  applyWallpaper(color);
+
  if(spaceChannel)await spaceChannel.send({
-  type:"broadcast",event:"wallpaper",payload:{senderId:currentUser.id,color}
+  type:"broadcast",event:"wallpaper",
+  payload:{senderId:currentUser.id,value:color}
  });
- say("settingsStatus","Your shared wallpaper has been updated ❤️");
+
+ if(oldWallpaper.startsWith("photo:")){
+  const oldPath=oldWallpaper.substring(6);
+  await sb.storage.from("love-photos").remove([oldPath]);
+ }
+
+ say("settingsStatus","Your shared colour wallpaper has been updated ❤️");
+}
+
+async function uploadWallpaper(){
+ const file=$("wallpaperFile").files[0];
+
+ if(!file){say("settingsStatus","Choose a photo first.");return}
+ if(!file.type.startsWith("image/")){
+  say("settingsStatus","Choose an image file.");return
+ }
+ if(file.size>100*1024*1024){
+  say("settingsStatus","The photo must be under 100 MB.");return
+ }
+
+ say("settingsStatus","Uploading wallpaper...");
+
+ const path=coupleId+"/wallpaper-"+Date.now()+"-"+crypto.randomUUID();
+
+ const {error:uploadError}=await sb.storage.from("love-photos")
+  .upload(path,file,{upsert:false,contentType:file.type});
+
+ if(uploadError){
+  say("settingsStatus","Upload failed: "+uploadError.message);
+  return;
+ }
+
+ const {data:oldData}=await sb.from("love_settings")
+  .select("wallpaper").eq("couple_id",coupleId).maybeSingle();
+
+ const oldWallpaper=oldData?.wallpaper||"";
+
+ const value="photo:"+path;
+
+ const {error}=await sb.from("love_settings").upsert({
+  couple_id:coupleId,wallpaper:value,
+  updated_at:new Date().toISOString()
+ },{onConflict:"couple_id"});
+
+ if(error){
+  await sb.storage.from("love-photos").remove([path]);
+  say("settingsStatus",errorText(error));
+  return;
+ }
+
+ await showWallpaper(value);
+ $("wallpaperFile").value="";
+
+ if(spaceChannel)await spaceChannel.send({
+  type:"broadcast",event:"wallpaper",
+  payload:{senderId:currentUser.id,value}
+ });
+
+ if(oldWallpaper.startsWith("photo:")){
+  const oldPath=oldWallpaper.substring(6);
+  await sb.storage.from("love-photos").remove([oldPath]);
+ }
+
+ say("settingsStatus","Your photo wallpaper is now shared ❤️");
+}
+
+async function removePhotoWallpaper(){
+ await saveWallpaper();
 }
 
 /* SIGN OUT */
@@ -715,6 +922,7 @@ window.addEventListener("beforeinstallprompt",event=>{
  installPrompt=event;
  $("installBtn").classList.remove("hidden");
 });
+
 async function installApp(){
  if(!installPrompt){
   say("installStatus","Open the browser menu and choose Add to Home screen if available.");
@@ -725,6 +933,7 @@ async function installApp(){
  installPrompt=null;
  $("installBtn").classList.add("hidden");
 }
+
 window.addEventListener("appinstalled",()=>{
  say("installStatus","Love Space has been installed ❤️");
 });
