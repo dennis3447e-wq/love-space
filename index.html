@@ -1,7 +1,13 @@
+
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#09070b"><meta name="description" content="Love Space — a private galaxy for two."><link rel="manifest" href="manifest.json"><title>Love Space</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#09070b">
+<meta name="description" content="Love Space — a private galaxy for two.">
+<link rel="manifest" href="manifest.json">
+<title>Love Space</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root{--bg:#09070b;--panel:#151017;--panel2:#21151e;--red:#ef3154;--pink:#ff7894;--text:#fff5f7;--muted:#bbaab2;--line:#38232e;--green:#38d996}
@@ -17,6 +23,7 @@ button:disabled{opacity:.5}
 .planet{font-size:36px}
 .brand h1{font-size:27px;letter-spacing:3px;margin:3px}
 .brand p,.muted{color:var(--muted)}
+.install-button{margin:12px auto 0;display:block;max-width:230px;width:100%}
 .card{background:linear-gradient(145deg,rgba(35,22,32,.96),rgba(17,13,21,.96));border:1px solid var(--line);border-radius:21px;padding:17px;margin:12px 0;box-shadow:0 12px 35px #0005}
 .hidden{display:none!important}
 h2{font-size:19px;margin:0 0 12px}
@@ -64,7 +71,13 @@ h3{margin:8px 0}
 </head>
 <body>
 <div class="wrap">
-<header class="brand"><div class="planet">🪐</div><h1>LOVE SPACE</h1><p>One little universe. Just the two of you.</p></header>
+<header class="brand">
+<div class="planet">🪐</div>
+<h1>LOVE SPACE</h1>
+<p>One little universe. Just the two of you.</p>
+<button id="installAppBtn" class="install-button hidden" type="button">Install Love Space</button>
+<p id="installHelp" class="small"></p>
+</header>
 
 <section id="authView" class="card hidden">
 <h2>Enter your universe</h2>
@@ -179,6 +192,55 @@ let messageSubscription=null,settingsSubscription=null;
 let wallpaperObjectUrl=null,currentWallpaperPath=null,currentWallpaperMode="chat";
 let currentNickname=localStorage.getItem(nicknameKey)||"";
 let messagesById=new Map();
+let installEvent=null;
+
+function setupInstall(){
+const btn=$("installAppBtn");
+const help=$("installHelp");
+
+function installed(){
+return window.matchMedia("(display-mode: standalone)").matches||window.navigator.standalone===true;
+}
+
+if(installed()){
+btn.textContent="Love Space installed ✓";
+btn.classList.remove("hidden");
+btn.disabled=true;
+help.textContent="You're already inside the app.";
+}else{
+btn.classList.remove("hidden");
+}
+
+window.addEventListener("beforeinstallprompt",event=>{
+event.preventDefault();
+installEvent=event;
+btn.textContent="Install Love Space";
+help.textContent="Tap below to install Love Space on your phone.";
+});
+
+btn.addEventListener("click",async()=>{
+if(installed()){
+help.textContent="Love Space is already installed.";
+return;
+}
+if(installEvent){
+installEvent.prompt();
+const result=await installEvent.userChoice;
+help.textContent=result.outcome==="accepted"?"Installation accepted. ❤️":"Installation cancelled. You can try again.";
+installEvent=null;
+}else{
+help.textContent=/SamsungBrowser/i.test(navigator.userAgent)
+?"Open the browser menu ☰ → Add page to → Home screen."
+:"Open your browser menu ⋮ → Install app or Add to Home screen.";
+}
+});
+
+window.addEventListener("appinstalled",()=>{
+btn.textContent="Love Space installed ✓";
+btn.disabled=true;
+help.textContent="Successfully installed. ❤️";
+});
+}
 
 function setView(v){
 show("authView",v==="auth");
@@ -486,6 +548,20 @@ let o=document.createElement("option");o.value=item.path;o.textContent=item.name
 if(selected&&[...select.options].some(o=>o.value===selected))select.value=selected;
 if(currentWallpaperPath)select.value=currentWallpaperPath;
 }
+
+/* Save settings whether a row already exists or not. */
+async function saveSettingsPatch(patch){
+let existing=await sb.from("love_settings").select("couple_id").eq("couple_id",coupleId).maybeSingle();
+if(existing.error)throw existing.error;
+let result;
+if(existing.data){
+result=await sb.from("love_settings").update({...patch,updated_at:new Date().toISOString()}).eq("couple_id",coupleId);
+}else{
+result=await sb.from("love_settings").insert({couple_id:coupleId,...patch,updated_at:new Date().toISOString()});
+}
+if(result.error)throw result.error;
+}
+
 async function savePhotoWallpaper(){
 let file=$("wallpaperPhoto").files[0],path=$("sharedWallpaper").value,mode=$("wallpaperMode").value;
 say("settingsMsg","Saving shared photo wallpaper…");
@@ -504,35 +580,34 @@ if(blob){
 if(wallpaperObjectUrl)URL.revokeObjectURL(wallpaperObjectUrl);
 wallpaperObjectUrl=URL.createObjectURL(blob);paintPhotoWallpaper(wallpaperObjectUrl,mode);
 }else paintPhotoWallpaper(url,mode);
-let saved=await sb.from("love_settings").update({wallpaper_path:(mode==="app"?"app::":"chat::")+path,updated_at:new Date().toISOString()}).eq("couple_id",coupleId);
-if(saved.error)throw saved.error;
+await saveSettingsPatch({wallpaper:$("wallpaper").value,wallpaper_path:(mode==="app"?"app::":"chat::")+path});
 currentWallpaperPath=path;currentWallpaperMode=mode;say("settingsMsg","Shared photo wallpaper saved for both of you.");
 }catch(e){say("settingsMsg",friendlyError(e))}
 }
 async function clearPhotoWallpaper(){
 say("settingsMsg","Removing photo wallpaper…");
 try{
-let r=await sb.from("love_settings").update({wallpaper_path:null,updated_at:new Date().toISOString()}).eq("couple_id",coupleId);
-if(r.error)throw r.error;
+await saveSettingsPatch({wallpaper:$("wallpaper").value,wallpaper_path:null});
 currentWallpaperPath=null;clearPhotoStyles();applyWallpaper($("wallpaper").value);say("settingsMsg","Photo wallpaper removed. Preset atmosphere restored.");
 }catch(e){say("settingsMsg",friendlyError(e))}
 }
 async function saveWallpaper(){
 let v=$("wallpaper").value;say("settingsMsg","Saving…");
 try{
-let r=await sb.from("love_settings").update({wallpaper:v,wallpaper_path:null,updated_at:new Date().toISOString()}).eq("couple_id",coupleId);
-if(r.error)throw r.error;
+await saveSettingsPatch({wallpaper:v,wallpaper_path:null});
 currentWallpaperPath=null;clearPhotoStyles();applyWallpaper(v);say("settingsMsg","Shared atmosphere updated.");
 }catch(e){say("settingsMsg",friendlyError(e))}
 }
 function subscribeToSettings(){
 if(settingsSubscription)sb.removeChannel(settingsSubscription);
 settingsSubscription=sb.channel("love-settings-"+coupleId)
-.on("postgres_changes",{event:"UPDATE",schema:"public",table:"love_settings",filter:"couple_id=eq."+coupleId},async payload=>{
-let stored=payload.new.wallpaper_path||"",mode=stored.startsWith("app::")?"app":"chat";
+.on("postgres_changes",{event:"*",schema:"public",table:"love_settings",filter:"couple_id=eq."+coupleId},async payload=>{
+let row=payload.new;
+if(!row)return;
+let stored=row.wallpaper_path||"",mode=stored.startsWith("app::")?"app":"chat";
 let path=stored.startsWith("app::")?stored.slice(5):stored.startsWith("chat::")?stored.slice(6):"";
 currentWallpaperPath=path||null;currentWallpaperMode=mode;
-$("wallpaper").value=payload.new.wallpaper||"galaxy";$("wallpaperMode").value=mode;
+$("wallpaper").value=row.wallpaper||"galaxy";$("wallpaperMode").value=mode;
 if(path)await showSavedPhoto(path,mode);
 else{clearPhotoStyles();applyWallpaper($("wallpaper").value)}
 }).subscribe();
@@ -555,7 +630,12 @@ let online=navigator.onLine;$("netState").textContent=online?"● Online":"● O
 if(online)flushQueue();
 }
 async function init(){
-if("serviceWorker" in navigator)navigator.serviceWorker.register("./sw.js").catch(e=>console.warn("Service worker registration failed",e));
+setupInstall();
+if("serviceWorker" in navigator){
+navigator.serviceWorker.register("./sw.js",{updateViaCache:"none"})
+.then(reg=>reg.update())
+.catch(e=>console.warn("Service worker registration failed",e));
+}
 if(!window.supabase){setView("auth");say("authMsg","Supabase library did not load. Check your internet connection and reload.");return}
 sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 $("loginBtn").onclick=()=>authAction("login");$("signupBtn").onclick=()=>authAction("signup");
@@ -588,4 +668,4 @@ updateNetwork();
 init();
 </script>
 </body>
- </html>
+</html>
