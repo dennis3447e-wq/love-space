@@ -1,12 +1,7 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#09070b">
-<meta name="description" content="Love Space — a private galaxy for two.">
-<link rel="manifest" href="manifest.json">
-<title>Love Space</title>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#09070b"><meta name="description" content="Love Space — a private galaxy for two."><link rel="manifest" href="manifest.json"><title>Love Space</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root{--bg:#09070b;--panel:#151017;--panel2:#21151e;--red:#ef3154;--pink:#ff7894;--text:#fff5f7;--muted:#bbaab2;--line:#38232e;--green:#38d996}
@@ -69,20 +64,13 @@ h3{margin:8px 0}
 </head>
 <body>
 <div class="wrap">
-<header class="brand">
-<div class="planet">🪐</div>
-<h1>LOVE SPACE</h1>
-<p>One little universe. Just the two of you.</p>
-</header>
+<header class="brand"><div class="planet">🪐</div><h1>LOVE SPACE</h1><p>One little universe. Just the two of you.</p></header>
 
 <section id="authView" class="card hidden">
 <h2>Enter your universe</h2>
 <input id="email" class="field" type="email" autocomplete="email" placeholder="Email address">
 <input id="password" class="field" type="password" autocomplete="current-password" placeholder="Password (at least 8 characters)">
-<div class="row">
-<button id="loginBtn">Log in</button>
-<button id="signupBtn" class="secondary">Create account</button>
-</div>
+<div class="row"><button id="loginBtn">Log in</button><button id="signupBtn" class="secondary">Create account</button></div>
 <p id="authMsg" class="status"></p>
 <p class="muted small">Create an account on your phone, then Eddi creates her own account on hers.</p>
 </section>
@@ -100,53 +88,28 @@ h3{margin:8px 0}
 
 <main id="appView" class="hidden">
 <section class="card">
-<div class="topline">
-<div>
-<div class="muted small">YOUR PRIVATE UNIVERSE</div>
-<h2 id="spaceTitle">Our Universe</h2>
-</div>
-<div>
-<span id="netState" class="pill">Checking connection…</span>
-<button id="logoutBtn" class="secondary">Log out</button>
-</div>
-</div>
+<div class="topline"><div><div class="muted small">YOUR PRIVATE UNIVERSE</div><h2 id="spaceTitle">Our Universe</h2></div><div><span id="netState" class="pill">Checking connection…</span> <button id="logoutBtn" class="secondary">Log out</button></div></div>
 <div class="muted small">Your private invitation code</div>
-<div class="row" style="align-items:center">
-<div id="inviteCode" class="code">------</div>
-<button id="copyCode" class="secondary">Copy code</button>
-</div>
+<div class="row" style="align-items:center"><div id="inviteCode" class="code">------</div><button id="copyCode" class="secondary">Copy code</button></div>
 <p class="muted small">Share this code privately. Your space is limited to two accounts.</p>
 </section>
 
 <nav class="tabs">
-<button data-tab="homePanel">Home ✨</button>
-<button data-tab="chatPanel" class="secondary">Chat 💬</button>
-<button data-tab="mediaPanel" class="secondary">Memories 📸</button>
-<button data-tab="musicPanel" class="secondary">Music 🎵</button>
-<button data-tab="settingsPanel" class="secondary">Space ⚙️</button>
+<button data-tab="homePanel">Home ✨</button><button data-tab="chatPanel" class="secondary">Chat 💬</button><button data-tab="mediaPanel" class="secondary">Memories 📸</button><button data-tab="musicPanel" class="secondary">Music 🎵</button><button data-tab="settingsPanel" class="secondary">Space ⚙️</button>
 </nav>
 
 <section id="homePanel" class="card">
 <h2>Welcome back to your universe 💗</h2>
 <p class="muted">A little space that belongs to both of you.</p>
-<div class="row">
-<button data-go="chatPanel">Open our chat</button>
-<button class="secondary" data-go="mediaPanel">View memories</button>
-</div>
+<div class="row"><button data-go="chatPanel">Open our chat</button><button class="secondary" data-go="mediaPanel">View memories</button></div>
 <p class="muted small">Messages sync when you're online. Messages you send offline are queued on this phone and sent when connection returns.</p>
 </section>
 
 <section id="chatPanel" class="card hidden">
-<div class="sectionTitle">
-<h2>Just us 💗</h2>
-<span class="pill" id="chatStatus">Private chat</span>
-</div>
+<div class="sectionTitle"><h2>Just us 💗</h2><span class="pill" id="chatStatus">Private chat</span></div>
 <div id="messages" class="messages" aria-live="polite"></div>
 <textarea id="messageInput" class="field" rows="2" placeholder="Send a message…"></textarea>
-<div class="row">
-<button id="sendBtn">Send message</button>
-<button id="refreshBtn" class="secondary">Refresh</button>
-</div>
+<div class="row"><button id="sendBtn">Send message</button><button id="refreshBtn" class="secondary">Refresh</button></div>
 <p id="chatMsg" class="status"></p>
 <p class="muted small">✓ Sent · <span style="color:var(--green)">✓✓</span> Read by your partner</p>
 </section>
@@ -180,21 +143,15 @@ h3{margin:8px 0}
 <option value="midnight">Midnight</option>
 <option value="red">Crimson orbit</option>
 </select>
-
 <label class="muted" for="wallpaperMode">Photo wallpaper placement</label>
 <select id="wallpaperMode" class="field">
 <option value="chat">Chat background only</option>
 <option value="app">Whole app background</option>
 </select>
-
 <label class="muted" for="wallpaperPhoto">Choose a photo from your phone</label>
 <input id="wallpaperPhoto" class="field" type="file" accept="image/*">
-
 <label class="muted" for="sharedWallpaper">Or choose a photo already in Memories</label>
-<select id="sharedWallpaper" class="field">
-<option value="">Choose a shared photo…</option>
-</select>
-
+<select id="sharedWallpaper" class="field"><option value="">Choose a shared photo…</option></select>
 <div class="row">
 <button id="savePhotoWallpaper" class="secondary">Use selected photo</button>
 <button id="clearPhotoWallpaper" class="secondary">Remove photo</button>
@@ -204,13 +161,11 @@ h3{margin:8px 0}
 <p class="muted small">Photo wallpapers sync to both phones. Each phone keeps an offline copy after it has loaded the photo once.</p>
 </section>
 </main>
-
 <div class="footer">LOVE SPACE · MADE FOR TWO</div>
 </div>
 
 <script>
 "use strict";
-
 const SUPABASE_URL="https://oiwmbgszcesiflpjooap.supabase.co";
 const SUPABASE_KEY="sb_publishable_OiquM_qONAjwK5khLen1Tw_7GEvFe53";
 const $=id=>document.getElementById(id);
@@ -219,7 +174,6 @@ const say=(id,msg)=>{$(id).textContent=msg||""};
 const nicknameKey="love_nickname";
 const queueKey="love_space_pending_";
 const WALL_CACHE="love-space-wallpapers-v1";
-
 let sb,currentUser=null,coupleId=null,inviteCode=null;
 let messageSubscription=null,settingsSubscription=null;
 let wallpaperObjectUrl=null,currentWallpaperPath=null,currentWallpaperMode="chat";
@@ -231,7 +185,6 @@ show("authView",v==="auth");
 show("setupView",v==="setup");
 show("appView",v==="app");
 }
-
 function friendlyError(e){
 let m=e?.message||String(e||"Unknown error");
 if(m.includes("Invalid login credentials"))return"Email or password is incorrect.";
@@ -240,80 +193,49 @@ if(m.includes("already belongs"))return"This account is already connected to a L
 if(m.includes("full")||m.includes("two members"))return"This Love Space already has two members.";
 return m;
 }
-
 async function authAction(kind){
 let email=$("email").value.trim(),password=$("password").value;
-if(!email||password.length<8){
-say("authMsg","Enter your email and a password with at least 8 characters.");
-return;
-}
+if(!email||password.length<8){say("authMsg","Enter your email and a password with at least 8 characters.");return}
 say("authMsg",kind==="signup"?"Creating account…":"Logging in…");
 try{
-let r=kind==="signup"
-?await sb.auth.signUp({email,password})
-:await sb.auth.signInWithPassword({email,password});
+let r=kind==="signup"?await sb.auth.signUp({email,password}):await sb.auth.signInWithPassword({email,password});
 if(r.error)throw r.error;
-if(kind==="signup"&&!r.data.session){
-say("authMsg","Account created. Check your email to confirm it, then log in.");
-return;
-}
+if(kind==="signup"&&!r.data.session){say("authMsg","Account created. Check your email to confirm it, then log in.");return}
 currentUser=r.data.user;
 await continueAfterLogin();
 }catch(e){say("authMsg",friendlyError(e))}
 }
-
 async function continueAfterLogin(){
 let {data,error}=await sb.from("love_couple_members").select("couple_id").eq("user_id",currentUser.id).maybeSingle();
-if(error){
-setView("setup");
-say("setupMsg",friendlyError(error));
-return;
+if(error){setView("setup");say("setupMsg",friendlyError(error));return}
+if(data?.couple_id){coupleId=data.couple_id;await loadSpace()}
+else{$("nickname").value=currentNickname;setView("setup")}
 }
-if(data?.couple_id){
-coupleId=data.couple_id;
-await loadSpace();
-}else{
-$("nickname").value=currentNickname;
-setView("setup");
-}
-}
-
 async function createSpace(){
 let name=$("nickname").value.trim();
 if(!name){say("setupMsg","Choose your name or nickname first.");return}
-currentNickname=name.slice(0,25);
-localStorage.setItem(nicknameKey,currentNickname);
-say("setupMsg","Creating your universe…");
-$("createBtn").disabled=true;
+currentNickname=name.slice(0,25);localStorage.setItem(nicknameKey,currentNickname);
+say("setupMsg","Creating your universe…");$("createBtn").disabled=true;
 try{
-let r=await sb.rpc("create_love_couple");
-if(r.error)throw r.error;
+let r=await sb.rpc("create_love_couple");if(r.error)throw r.error;
 let d=Array.isArray(r.data)?r.data[0]:r.data;
 if(!d?.couple_id||!d?.invite_code)throw Error("The database did not return the new space details.");
-coupleId=d.couple_id;
-inviteCode=d.invite_code;
-await loadSpace();
+coupleId=d.couple_id;inviteCode=d.invite_code;await loadSpace();
 }catch(e){say("setupMsg",friendlyError(e))}
 finally{$("createBtn").disabled=false}
 }
-
 async function joinSpace(){
 let name=$("nickname").value.trim(),code=$("inviteInput").value.trim();
 if(!name||!code){say("setupMsg","Enter your nickname and invitation code.");return}
-currentNickname=name.slice(0,25);
-localStorage.setItem(nicknameKey,currentNickname);
-say("setupMsg","Joining your universe…");
-$("joinBtn").disabled=true;
+currentNickname=name.slice(0,25);localStorage.setItem(nicknameKey,currentNickname);
+say("setupMsg","Joining your universe…");$("joinBtn").disabled=true;
 try{
-let r=await sb.rpc("join_love_couple",{p_invite_code:code});
-if(r.error)throw r.error;
+let r=await sb.rpc("join_love_couple",{p_invite_code:code});if(r.error)throw r.error;
 if(!r.data)throw Error("The database did not return a space ID.");
-coupleId=r.data;
-await loadSpace();
+coupleId=r.data;await loadSpace();
 }catch(e){say("setupMsg",friendlyError(e))}
 finally{$("joinBtn").disabled=false}
 }
-
 async function loadSpace(){
 if(!coupleId)throw Error("Missing Love Space ID.");
 let m=await sb.from("love_couple_members").select("user_id").eq("couple_id",coupleId);
@@ -321,35 +243,20 @@ if(m.error)throw m.error;
 if(!m.data?.some(x=>x.user_id===currentUser.id))throw Error("This account is not a member of this Love Space.");
 let s=await sb.from("love_couples").select("name,invite_code").eq("id",coupleId).single();
 if(s.error)throw s.error;
-inviteCode=s.data.invite_code;
-$("spaceTitle").textContent=s.data.name||"Our Universe";
-$("inviteCode").textContent=inviteCode||"------";
+inviteCode=s.data.invite_code;$("spaceTitle").textContent=s.data.name||"Our Universe";$("inviteCode").textContent=inviteCode||"------";
 setView("app");
 await Promise.all([loadMessages(),loadMedia(),loadWallpaper()]);
-subscribeToMessages();
-subscribeToSettings();
-await flushQueue();
-updateNetwork();
+subscribeToMessages();subscribeToSettings();await flushQueue();updateNetwork();
 }
-
-function parseContent(raw){
-try{return JSON.parse(raw)}catch(_){return{nickname:"Partner",text:raw}}
-}
-
+function parseContent(raw){try{return JSON.parse(raw)}catch(_){return{nickname:"Partner",text:raw}}}
 async function loadMessages(){
 let r=await sb.from("love_messages").select("id,user_id,content,created_at,edited_at,deleted_at,deleted_by").eq("couple_id",coupleId).order("created_at",{ascending:true}).limit(150);
 if(r.error){say("chatMsg",friendlyError(r.error));return}
-messagesById.clear();
-(r.data||[]).forEach(x=>messagesById.set(x.id,x));
-await renderMessages();
-await markPartnerMessagesRead(r.data||[]);
+messagesById.clear();(r.data||[]).forEach(x=>messagesById.set(x.id,x));
+await renderMessages();await markPartnerMessagesRead(r.data||[]);
 }
-
-function partnerId(){return window.__lovePartnerId||null}
-
 async function renderMessages(){
-let box=$("messages");
-box.innerHTML="";
+let box=$("messages");box.innerHTML="";
 let rows=[...messagesById.values()].sort((a,b)=>new Date(a.created_at)-new Date(b.created_at));
 let partner=await sb.from("love_couple_members").select("user_id").eq("couple_id",coupleId).neq("user_id",currentUser.id).maybeSingle();
 let pid=partner.data?.user_id||null;
@@ -361,72 +268,35 @@ if(!rr.error)(rr.data||[]).forEach(x=>read.add(x.message_id));
 }
 rows.forEach(row=>{
 let p=parseContent(row.content),mine=row.user_id===currentUser.id;
-let div=document.createElement("div");
-div.className="bubble"+(mine?" mine":"")+(row.deleted_at?" deleted":"");
-let head=document.createElement("small"),name=document.createElement("span");
-name.textContent=p.nickname||"Partner";
-head.append(name);
-if(row.edited_at&&!row.deleted_at){
-let ed=document.createElement("span");
-ed.textContent="edited";
-head.append(ed);
-}
+let div=document.createElement("div");div.className="bubble"+(mine?" mine":"")+(row.deleted_at?" deleted":"");
+let head=document.createElement("small"),name=document.createElement("span");name.textContent=p.nickname||"Partner";head.append(name);
+if(row.edited_at&&!row.deleted_at){let ed=document.createElement("span");ed.textContent="edited";head.append(ed)}
+if(mine&&!row.deleted_at){let tick=document.createElement("span");tick.className="ticks"+(read.has(row.id)?" read":"");tick.textContent=read.has(row.id)?"✓✓":"✓";tick.title=read.has(row.id)?"Read":"Sent";head.append(tick)}
+let body=document.createElement("div");body.className="body";body.textContent=row.deleted_at?"This message was deleted":p.text||"";div.append(head,body);
 if(mine&&!row.deleted_at){
-let tick=document.createElement("span");
-tick.className="ticks"+(read.has(row.id)?" read":"");
-tick.textContent=read.has(row.id)?"✓✓":"✓";
-tick.title=read.has(row.id)?"Read":"Sent";
-head.append(tick);
-}
-let body=document.createElement("div");
-body.className="body";
-body.textContent=row.deleted_at?"This message was deleted":p.text||"";
-div.append(head,body);
-if(mine&&!row.deleted_at){
-let tools=document.createElement("div");
-tools.className="tools";
-let edit=document.createElement("button");
-edit.className="ghost";
-edit.textContent="Edit";
-edit.onclick=()=>editMessage(row);
-let del=document.createElement("button");
-del.className="ghost";
-del.textContent="Delete";
-del.onclick=()=>deleteMessage(row);
-tools.append(edit,del);
-div.append(tools);
+let tools=document.createElement("div");tools.className="tools";
+let edit=document.createElement("button");edit.className="ghost";edit.textContent="Edit";edit.onclick=()=>editMessage(row);
+let del=document.createElement("button");del.className="ghost";del.textContent="Delete";del.onclick=()=>deleteMessage(row);
+tools.append(edit,del);div.append(tools);
 }
 box.append(div);
 });
 box.scrollTop=box.scrollHeight;
 }
-
 async function editMessage(row){
 let p=parseContent(row.content),next=prompt("Edit your message",p.text||"");
-if(next===null)return;
-next=next.trim();
-if(!next)return alert("A message cannot be empty.");
+if(next===null)return;next=next.trim();if(!next)return alert("A message cannot be empty.");
 let content=JSON.stringify({...p,text:next});
 let r=await sb.from("love_messages").update({content,edited_at:new Date().toISOString()}).eq("id",row.id).eq("user_id",currentUser.id);
 if(r.error)return say("chatMsg",friendlyError(r.error));
-row.content=content;
-row.edited_at=new Date().toISOString();
-messagesById.set(row.id,row);
-await renderMessages();
-say("chatMsg","Message updated.");
+row.content=content;row.edited_at=new Date().toISOString();messagesById.set(row.id,row);await renderMessages();say("chatMsg","Message updated.");
 }
-
 async function deleteMessage(row){
 if(!confirm("Delete this message for both of you?"))return;
 let r=await sb.from("love_messages").update({deleted_at:new Date().toISOString(),deleted_by:currentUser.id}).eq("id",row.id).eq("user_id",currentUser.id);
 if(r.error)return say("chatMsg",friendlyError(r.error));
-row.deleted_at=new Date().toISOString();
-row.deleted_by=currentUser.id;
-messagesById.set(row.id,row);
-await renderMessages();
-say("chatMsg","Message deleted for both of you.");
+row.deleted_at=new Date().toISOString();row.deleted_by=currentUser.id;messagesById.set(row.id,row);await renderMessages();say("chatMsg","Message deleted for both of you.");
 }
-
 function subscribeToMessages(){
 if(messageSubscription)sb.removeChannel(messageSubscription);
 messageSubscription=sb.channel("love-messages-"+coupleId)
@@ -439,7 +309,6 @@ if(payload.new?.user_id!==currentUser.id)markPartnerMessagesRead([payload.new]);
 .on("postgres_changes",{event:"*",schema:"public",table:"love_message_receipts",filter:"couple_id=eq."+coupleId},()=>renderMessages())
 .subscribe();
 }
-
 async function markPartnerMessagesRead(rows){
 let unseen=rows.filter(x=>x.user_id!==currentUser.id&&!x.deleted_at);
 if(!unseen.length||!navigator.onLine)return;
@@ -447,71 +316,38 @@ let data=unseen.map(x=>({message_id:x.id,couple_id:coupleId,reader_id:currentUse
 let r=await sb.from("love_message_receipts").upsert(data,{onConflict:"message_id,reader_id",ignoreDuplicates:true});
 if(r.error)console.warn("Read receipt:",r.error.message);
 }
-
-function pending(){
-try{return JSON.parse(localStorage.getItem(queueKey+coupleId)||"[]")}catch(_){return[]}
-}
+function pending(){try{return JSON.parse(localStorage.getItem(queueKey+coupleId)||"[]")}catch(_){return[]}}
 function savePending(q){localStorage.setItem(queueKey+coupleId,JSON.stringify(q))}
-
 async function sendMessage(){
-let text=$("messageInput").value.trim();
-if(!text)return;
+let text=$("messageInput").value.trim();if(!text)return;
 let content=JSON.stringify({nickname:currentNickname||"Partner",text});
-if(!navigator.onLine){
-let q=pending();
-q.push({content,created_at:new Date().toISOString()});
-savePending(q);
-$("messageInput").value="";
-say("chatMsg","Saved on this phone. It will send when you're online.");
-return;
-}
+if(!navigator.onLine){let q=pending();q.push({content,created_at:new Date().toISOString()});savePending(q);$("messageInput").value="";say("chatMsg","Saved on this phone. It will send when you're online.");return}
 $("sendBtn").disabled=true;
 try{
 let r=await sb.from("love_messages").insert({couple_id:coupleId,user_id:currentUser.id,content}).select().single();
-if(r.error)throw r.error;
-messagesById.set(r.data.id,r.data);
-await renderMessages();
-$("messageInput").value="";
-say("chatMsg","");
+if(r.error)throw r.error;messagesById.set(r.data.id,r.data);await renderMessages();$("messageInput").value="";say("chatMsg","");
 }catch(e){
-if(!navigator.onLine){
-let q=pending();
-q.push({content,created_at:new Date().toISOString()});
-savePending(q);
-$("messageInput").value="";
-say("chatMsg","Connection lost. Message saved to send later.");
-}else say("chatMsg",friendlyError(e));
+if(!navigator.onLine){let q=pending();q.push({content,created_at:new Date().toISOString()});savePending(q);$("messageInput").value="";say("chatMsg","Connection lost. Message saved to send later.")}
+else say("chatMsg",friendlyError(e));
+}finally{$("sendBtn").disabled=false}
 }
-finally{$("sendBtn").disabled=false}
-}
-
 async function flushQueue(){
 if(!navigator.onLine||!coupleId)return;
-let q=pending();
-if(!q.length)return;
+let q=pending();if(!q.length)return;
 let left=[];
-for(let item of q){
-let r=await sb.from("love_messages").insert({couple_id:coupleId,user_id:currentUser.id,content:item.content});
-if(r.error){
-left.push(item);
-left.push(...q.slice(q.indexOf(item)+1));
-break;
-}
+for(let i=0;i<q.length;i++){
+let r=await sb.from("love_messages").insert({couple_id:coupleId,user_id:currentUser.id,content:q[i].content});
+if(r.error){left=q.slice(i);break}
 }
 savePending(left);
-if(!left.length){
-say("chatMsg","Your offline messages have been sent.");
-await loadMessages();
+if(!left.length){say("chatMsg","Your offline messages have been sent.");await loadMessages()}
 }
-}
-
 function fileKind(f){
 if(f.type.startsWith("image/"))return"photo";
 if(f.type.startsWith("video/"))return"video";
 if(f.type.startsWith("audio/"))return"music";
 return null;
 }
-
 async function uploadFile(file,type,progressId){
 if(!file)throw Error("Choose a file first.");
 if(file.size>100*1024*1024)throw Error("Choose a file smaller than 100 MB.");
@@ -524,128 +360,64 @@ if(u.error)throw u.error;
 $(progressId).style.width="75%";
 let r=await sb.from("love_media").insert({couple_id:coupleId,user_id:currentUser.id,type,path,name:file.name});
 if(r.error)throw r.error;
-$(progressId).style.width="100%";
-setTimeout(()=>$(progressId).style.width="0",1200);
+$(progressId).style.width="100%";setTimeout(()=>$(progressId).style.width="0",1200);
 }
-
 async function signedUrl(type,path){
 let b=type==="music"?"love-music":type==="photo"?"love-photos":"love-videos";
 let r=await sb.storage.from(b).createSignedUrl(path,3600);
-if(r.error)throw r.error;
-return r.data.signedUrl;
+if(r.error)throw r.error;return r.data.signedUrl;
 }
-
 function downloadButton(url,name){
-let a=document.createElement("a");
-a.href=url;
-a.download=name||"love-space-file";
-a.target="_blank";
-a.rel="noopener";
-a.textContent="Download";
-a.className="muted small";
-a.style.display="block";
-a.style.marginTop="8px";
-return a;
+let a=document.createElement("a");a.href=url;a.download=name||"love-space-file";a.target="_blank";a.rel="noopener";a.textContent="Download";a.className="muted small";a.style.display="block";a.style.marginTop="8px";return a;
 }
-
 async function loadMedia(){
 let r=await sb.from("love_media").select("id,type,path,name,created_at").eq("couple_id",coupleId).order("created_at",{ascending:false}).limit(80);
-if(r.error){
-say("mediaMsg",friendlyError(r.error));
-say("musicMsg",friendlyError(r.error));
-return;
-}
-$("memories").innerHTML="";
-$("songs").innerHTML="";
+if(r.error){say("mediaMsg",friendlyError(r.error));say("musicMsg",friendlyError(r.error));return}
+$("memories").innerHTML="";$("songs").innerHTML="";
 await Promise.all((r.data||[]).map(async item=>{
 try{
-let url=await signedUrl(item.type,item.path);
-let card=document.createElement("div");
-card.className="mediaItem";
-let title=document.createElement("div");
-title.className="small";
-title.textContent=item.name||"Shared file";
-card.append(title);
+let url=await signedUrl(item.type,item.path),card=document.createElement("div");card.className="mediaItem";
+let title=document.createElement("div");title.className="small";title.textContent=item.name||"Shared file";card.append(title);
 if(item.type==="photo"){
-let img=document.createElement("img");
-img.loading="lazy";
-img.src=url;
-img.alt=item.name||"Shared photo";
-card.append(img,downloadButton(url,item.name));
-$("memories").append(card);
+let img=document.createElement("img");img.loading="lazy";img.src=url;img.alt=item.name||"Shared photo";card.append(img,downloadButton(url,item.name));$("memories").append(card);
 }else if(item.type==="video"){
-let v=document.createElement("video");
-v.src=url;
-v.controls=true;
-v.preload="metadata";
-card.append(v,downloadButton(url,item.name));
-$("memories").append(card);
+let v=document.createElement("video");v.src=url;v.controls=true;v.preload="metadata";card.append(v,downloadButton(url,item.name));$("memories").append(card);
 }else if(item.type==="music"){
-let a=document.createElement("audio");
-a.src=url;
-a.controls=true;
-a.preload="none";
-card.append(a,downloadButton(url,item.name));
-$("songs").append(card);
+let a=document.createElement("audio");a.src=url;a.controls=true;a.preload="none";card.append(a,downloadButton(url,item.name));$("songs").append(card);
 }
 }catch(e){console.warn("Media load failed",e)}
 }));
 }
-
 async function uploadMemory(){
 let f=$("photoVideoFile").files[0],t=f&&fileKind(f);
 if(!f||!["photo","video"].includes(t))return say("mediaMsg","Choose a photo or video.");
-say("mediaMsg","Uploading…");
-$("uploadMemory").disabled=true;
-try{
-await uploadFile(f,t,"memoryProgress");
-$("photoVideoFile").value="";
-await loadMedia();
-say("mediaMsg","Memory added to your space.");
-}catch(e){say("mediaMsg",friendlyError(e))}
+say("mediaMsg","Uploading…");$("uploadMemory").disabled=true;
+try{await uploadFile(f,t,"memoryProgress");$("photoVideoFile").value="";await loadMedia();say("mediaMsg","Memory added to your space.")}
+catch(e){say("mediaMsg",friendlyError(e))}
 finally{$("uploadMemory").disabled=false}
 }
-
 async function uploadMusic(){
 let f=$("musicFile").files[0];
 if(!f||fileKind(f)!=="music")return say("musicMsg","Choose an audio file.");
-say("musicMsg","Uploading song…");
-$("uploadMusic").disabled=true;
-try{
-await uploadFile(f,"music","musicProgress");
-$("musicFile").value="";
-await loadMedia();
-say("musicMsg","Song added to your library.");
-}catch(e){say("musicMsg",friendlyError(e))}
+say("musicMsg","Uploading song…");$("uploadMusic").disabled=true;
+try{await uploadFile(f,"music","musicProgress");$("musicFile").value="";await loadMedia();say("musicMsg","Song added to your library.")}
+catch(e){say("musicMsg",friendlyError(e))}
 finally{$("uploadMusic").disabled=false}
 }
 
-/* PHOTO WALLPAPER STORAGE */
-function wallpaperCacheKey(path){
-return new Request(location.origin+"/__love_wallpaper__/"+encodeURIComponent(path));
-}
-
+/* SHARED PHOTO WALLPAPER */
+function wallpaperCacheKey(path){return new Request(location.origin+"/__love_wallpaper__/"+encodeURIComponent(path))}
 async function cacheWallpaper(path,url){
 try{
 let response=await fetch(url,{mode:"cors",cache:"no-store"});
 if(!response.ok)throw Error("Wallpaper download failed.");
-let cache=await caches.open(WALL_CACHE);
-await cache.put(wallpaperCacheKey(path),response.clone());
-return await response.blob();
-}catch(e){
-console.warn("Wallpaper cache:",e);
-return null;
+let cache=await caches.open(WALL_CACHE);await cache.put(wallpaperCacheKey(path),response.clone());return await response.blob();
+}catch(e){console.warn("Wallpaper cache:",e);return null}
 }
-}
-
 async function getWallpaperBlob(path){
-try{
-let cache=await caches.open(WALL_CACHE);
-let hit=await cache.match(wallpaperCacheKey(path));
-return hit?await hit.blob():null;
-}catch(_){return null}
+try{let cache=await caches.open(WALL_CACHE),hit=await cache.match(wallpaperCacheKey(path));return hit?await hit.blob():null}
+catch(_){return null}
 }
-
 function paintPhotoWallpaper(url,mode){
 document.body.classList.toggle("full-photo-mode",mode==="app");
 document.body.classList.toggle("chat-photo-mode",mode==="chat");
@@ -660,70 +432,40 @@ box.style.backgroundSize=mode==="chat"?"cover":"";
 box.style.backgroundPosition=mode==="chat"?"center":"";
 }
 }
-
 async function showSavedPhoto(path,mode){
 if(!path){clearPhotoStyles();return}
 let blob=await getWallpaperBlob(path);
 if(blob){
 if(wallpaperObjectUrl)URL.revokeObjectURL(wallpaperObjectUrl);
-wallpaperObjectUrl=URL.createObjectURL(blob);
-paintPhotoWallpaper(wallpaperObjectUrl,mode);
-return;
+wallpaperObjectUrl=URL.createObjectURL(blob);paintPhotoWallpaper(wallpaperObjectUrl,mode);return;
 }
-if(!navigator.onLine){
-say("settingsMsg","This wallpaper is not cached on this phone yet. Connect once to save it for offline use.");
-return;
-}
+if(!navigator.onLine){say("settingsMsg","This wallpaper is not cached on this phone yet. Connect once to save it for offline use.");return}
 try{
-let url=await signedUrl("photo",path);
-let fresh=await cacheWallpaper(path,url);
+let url=await signedUrl("photo",path),fresh=await cacheWallpaper(path,url);
 if(fresh){
 if(wallpaperObjectUrl)URL.revokeObjectURL(wallpaperObjectUrl);
-wallpaperObjectUrl=URL.createObjectURL(fresh);
-paintPhotoWallpaper(wallpaperObjectUrl,mode);
+wallpaperObjectUrl=URL.createObjectURL(fresh);paintPhotoWallpaper(wallpaperObjectUrl,mode);
 }else paintPhotoWallpaper(url,mode);
 }catch(e){say("settingsMsg",friendlyError(e))}
 }
-
 function clearPhotoStyles(){
-if(wallpaperObjectUrl){
-URL.revokeObjectURL(wallpaperObjectUrl);
-wallpaperObjectUrl=null;
-}
+if(wallpaperObjectUrl){URL.revokeObjectURL(wallpaperObjectUrl);wallpaperObjectUrl=null}
 document.body.classList.remove("full-photo-mode","chat-photo-mode");
-document.body.style.backgroundImage="";
-document.body.style.backgroundSize="";
-document.body.style.backgroundPosition="";
-document.body.style.backgroundAttachment="";
-let box=$("messages");
-if(box)box.style.backgroundImage="";
+document.body.style.backgroundImage="";document.body.style.backgroundSize="";document.body.style.backgroundPosition="";document.body.style.backgroundAttachment="";
+let box=$("messages");if(box)box.style.backgroundImage="";
 }
-
 async function loadWallpaper(){
 let r=await sb.from("love_settings").select("wallpaper,wallpaper_path").eq("couple_id",coupleId).maybeSingle();
 if(r.error){say("settingsMsg",friendlyError(r.error));return}
-let v=r.data?.wallpaper||"galaxy";
-let stored=r.data?.wallpaper_path||"";
-let mode="chat",path=stored;
-if(stored.startsWith("app::")){
-mode="app";
-path=stored.slice(5);
-}else if(stored.startsWith("chat::")){
-mode="chat";
-path=stored.slice(6);
-}
-currentWallpaperPath=path||null;
-currentWallpaperMode=mode;
-$("wallpaper").value=v;
-$("wallpaperMode").value=mode;
+let v=r.data?.wallpaper||"galaxy",stored=r.data?.wallpaper_path||"",mode="chat",path=stored;
+if(stored.startsWith("app::")){mode="app";path=stored.slice(5)}
+else if(stored.startsWith("chat::")){mode="chat";path=stored.slice(6)}
+currentWallpaperPath=path||null;currentWallpaperMode=mode;
+$("wallpaper").value=v;$("wallpaperMode").value=mode;
 if(path)await showSavedPhoto(path,mode);
-else{
-clearPhotoStyles();
-applyWallpaper(v);
-}
+else{clearPhotoStyles();applyWallpaper(v)}
 await loadWallpaperChoices();
 }
-
 function applyWallpaper(v){
 let b={
 galaxy:"radial-gradient(circle at 15% 5%,#351326 0,transparent 34%),radial-gradient(circle at 90% 35%,#21143a 0,transparent 32%),#09070b",
@@ -733,26 +475,19 @@ red:"radial-gradient(circle at 50% 0%,#631326 0,transparent 45%),#10070b"
 };
 document.body.style.background=b[v]||b.galaxy;
 }
-
 async function loadWallpaperChoices(){
 let r=await sb.from("love_media").select("id,path,name,created_at").eq("couple_id",coupleId).eq("type","photo").order("created_at",{ascending:false}).limit(80);
 if(r.error){console.warn("Wallpaper choices:",r.error.message);return}
 let select=$("sharedWallpaper"),selected=select.value;
 select.innerHTML='<option value="">Choose a shared photo…</option>';
 (r.data||[]).forEach(item=>{
-let o=document.createElement("option");
-o.value=item.path;
-o.textContent=item.name||"Shared photo";
-select.append(o);
+let o=document.createElement("option");o.value=item.path;o.textContent=item.name||"Shared photo";select.append(o);
 });
 if(selected&&[...select.options].some(o=>o.value===selected))select.value=selected;
 if(currentWallpaperPath)select.value=currentWallpaperPath;
 }
-
 async function savePhotoWallpaper(){
-let file=$("wallpaperPhoto").files[0];
-let path=$("sharedWallpaper").value;
-let mode=$("wallpaperMode").value;
+let file=$("wallpaperPhoto").files[0],path=$("sharedWallpaper").value,mode=$("wallpaperMode").value;
 say("settingsMsg","Saving shared photo wallpaper…");
 try{
 if(file){
@@ -761,181 +496,95 @@ if(file.size>20*1024*1024)throw Error("Choose an image smaller than 20 MB.");
 await uploadFile(file,"photo","memoryProgress");
 let q=await sb.from("love_media").select("path").eq("couple_id",coupleId).eq("user_id",currentUser.id).eq("type","photo").order("created_at",{ascending:false}).limit(1).single();
 if(q.error)throw q.error;
-path=q.data.path;
-$("wallpaperPhoto").value="";
-await loadMedia();
-await loadWallpaperChoices();
+path=q.data.path;$("wallpaperPhoto").value="";await loadMedia();await loadWallpaperChoices();
 }
 if(!path)throw Error("Choose a photo from your phone or Memories first.");
-let url=await signedUrl("photo",path);
-let blob=await cacheWallpaper(path,url);
+let url=await signedUrl("photo",path),blob=await cacheWallpaper(path,url);
 if(blob){
 if(wallpaperObjectUrl)URL.revokeObjectURL(wallpaperObjectUrl);
-wallpaperObjectUrl=URL.createObjectURL(blob);
-paintPhotoWallpaper(wallpaperObjectUrl,mode);
+wallpaperObjectUrl=URL.createObjectURL(blob);paintPhotoWallpaper(wallpaperObjectUrl,mode);
 }else paintPhotoWallpaper(url,mode);
-let saved=await sb.from("love_settings").update({
-wallpaper_path:(mode==="app"?"app::":"chat::")+path,
-updated_at:new Date().toISOString()
-}).eq("couple_id",coupleId);
+let saved=await sb.from("love_settings").update({wallpaper_path:(mode==="app"?"app::":"chat::")+path,updated_at:new Date().toISOString()}).eq("couple_id",coupleId);
 if(saved.error)throw saved.error;
-currentWallpaperPath=path;
-currentWallpaperMode=mode;
-say("settingsMsg","Shared photo wallpaper saved for both of you.");
+currentWallpaperPath=path;currentWallpaperMode=mode;say("settingsMsg","Shared photo wallpaper saved for both of you.");
 }catch(e){say("settingsMsg",friendlyError(e))}
 }
-
 async function clearPhotoWallpaper(){
 say("settingsMsg","Removing photo wallpaper…");
 try{
-let r=await sb.from("love_settings").update({
-wallpaper_path:null,
-updated_at:new Date().toISOString()
-}).eq("couple_id",coupleId);
+let r=await sb.from("love_settings").update({wallpaper_path:null,updated_at:new Date().toISOString()}).eq("couple_id",coupleId);
 if(r.error)throw r.error;
-currentWallpaperPath=null;
-clearPhotoStyles();
-applyWallpaper($("wallpaper").value);
-say("settingsMsg","Photo wallpaper removed. Preset atmosphere restored.");
+currentWallpaperPath=null;clearPhotoStyles();applyWallpaper($("wallpaper").value);say("settingsMsg","Photo wallpaper removed. Preset atmosphere restored.");
 }catch(e){say("settingsMsg",friendlyError(e))}
 }
-
 async function saveWallpaper(){
-let v=$("wallpaper").value;
-say("settingsMsg","Saving…");
+let v=$("wallpaper").value;say("settingsMsg","Saving…");
 try{
-let r=await sb.from("love_settings").update({
-wallpaper:v,
-wallpaper_path:null,
-updated_at:new Date().toISOString()
-}).eq("couple_id",coupleId);
+let r=await sb.from("love_settings").update({wallpaper:v,wallpaper_path:null,updated_at:new Date().toISOString()}).eq("couple_id",coupleId);
 if(r.error)throw r.error;
-currentWallpaperPath=null;
-clearPhotoStyles();
-applyWallpaper(v);
-say("settingsMsg","Shared atmosphere updated.");
+currentWallpaperPath=null;clearPhotoStyles();applyWallpaper(v);say("settingsMsg","Shared atmosphere updated.");
 }catch(e){say("settingsMsg",friendlyError(e))}
 }
-
 function subscribeToSettings(){
 if(settingsSubscription)sb.removeChannel(settingsSubscription);
 settingsSubscription=sb.channel("love-settings-"+coupleId)
 .on("postgres_changes",{event:"UPDATE",schema:"public",table:"love_settings",filter:"couple_id=eq."+coupleId},async payload=>{
-let stored=payload.new.wallpaper_path||"";
-let mode=stored.startsWith("app::")?"app":"chat";
+let stored=payload.new.wallpaper_path||"",mode=stored.startsWith("app::")?"app":"chat";
 let path=stored.startsWith("app::")?stored.slice(5):stored.startsWith("chat::")?stored.slice(6):"";
-currentWallpaperPath=path||null;
-currentWallpaperMode=mode;
-$("wallpaper").value=payload.new.wallpaper||"galaxy";
-$("wallpaperMode").value=mode;
+currentWallpaperPath=path||null;currentWallpaperMode=mode;
+$("wallpaper").value=payload.new.wallpaper||"galaxy";$("wallpaperMode").value=mode;
 if(path)await showSavedPhoto(path,mode);
-else{
-clearPhotoStyles();
-applyWallpaper($("wallpaper").value);
-}
-})
-.subscribe();
+else{clearPhotoStyles();applyWallpaper($("wallpaper").value)}
+}).subscribe();
 }
 
 async function logout(){
 try{await sb.auth.signOut()}catch(e){console.warn(e)}
-currentUser=null;
-coupleId=null;
-inviteCode=null;
-if(messageSubscription){
-await sb.removeChannel(messageSubscription);
-messageSubscription=null;
+currentUser=null;coupleId=null;inviteCode=null;
+if(messageSubscription){await sb.removeChannel(messageSubscription);messageSubscription=null}
+if(settingsSubscription){await sb.removeChannel(settingsSubscription);settingsSubscription=null}
+clearPhotoStyles();setView("auth");
 }
-if(settingsSubscription){
-await sb.removeChannel(settingsSubscription);
-settingsSubscription=null;
-}
-clearPhotoStyles();
-setView("auth");
-}
-
 function switchTab(id){
 ["homePanel","chatPanel","mediaPanel","musicPanel","settingsPanel"].forEach(x=>show(x,x===id));
 document.querySelectorAll("[data-tab]").forEach(b=>b.classList.toggle("secondary",b.dataset.tab!==id));
 if(id==="chatPanel")loadMessages();
 }
-
 function updateNetwork(){
-let online=navigator.onLine;
-$("netState").textContent=online?"● Online":"● Offline";
-$("netState").className=online?"pill online":"pill offline";
+let online=navigator.onLine;$("netState").textContent=online?"● Online":"● Offline";$("netState").className=online?"pill online":"pill offline";
 if(online)flushQueue();
 }
-
 async function init(){
-if("serviceWorker" in navigator){
-navigator.serviceWorker.register("./sw.js").catch(e=>console.warn("Service worker registration failed",e));
-}
-if(!window.supabase){
-setView("auth");
-say("authMsg","Supabase library did not load. Check your internet connection and reload.");
-return;
-}
+if("serviceWorker" in navigator)navigator.serviceWorker.register("./sw.js").catch(e=>console.warn("Service worker registration failed",e));
+if(!window.supabase){setView("auth");say("authMsg","Supabase library did not load. Check your internet connection and reload.");return}
 sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
-$("loginBtn").onclick=()=>authAction("login");
-$("signupBtn").onclick=()=>authAction("signup");
-$("createBtn").onclick=createSpace;
-$("joinBtn").onclick=joinSpace;
+$("loginBtn").onclick=()=>authAction("login");$("signupBtn").onclick=()=>authAction("signup");
+$("createBtn").onclick=createSpace;$("joinBtn").onclick=joinSpace;
 $("sendBtn").onclick=sendMessage;
-$("messageInput").addEventListener("keydown",e=>{
-if(e.key==="Enter"&&!e.shiftKey){
-e.preventDefault();
-sendMessage();
-}
-});
-$("uploadMemory").onclick=uploadMemory;
-$("uploadMusic").onclick=uploadMusic;
-$("saveWallpaper").onclick=saveWallpaper;
-$("savePhotoWallpaper").onclick=savePhotoWallpaper;
-$("clearPhotoWallpaper").onclick=clearPhotoWallpaper;
-$("wallpaper").onchange=e=>{
-if(!currentWallpaperPath)applyWallpaper(e.target.value);
-};
-$("wallpaperMode").onchange=()=>{
-if(currentWallpaperPath)showSavedPhoto(currentWallpaperPath,$("wallpaperMode").value);
-};
+$("messageInput").addEventListener("keydown",e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();sendMessage()}});
+$("uploadMemory").onclick=uploadMemory;$("uploadMusic").onclick=uploadMusic;
+$("saveWallpaper").onclick=saveWallpaper;$("savePhotoWallpaper").onclick=savePhotoWallpaper;$("clearPhotoWallpaper").onclick=clearPhotoWallpaper;
+$("wallpaper").onchange=e=>{if(!currentWallpaperPath)applyWallpaper(e.target.value)};
+$("wallpaperMode").onchange=()=>{if(currentWallpaperPath)showSavedPhoto(currentWallpaperPath,$("wallpaperMode").value)};
 $("refreshBtn").onclick=loadMessages;
 $("copyCode").onclick=async()=>{
-try{
-await navigator.clipboard.writeText(inviteCode||"");
-$("copyCode").textContent="Copied!";
-setTimeout(()=>$("copyCode").textContent="Copy code",1500);
-}catch(_){say("settingsMsg","Select and copy the invitation code.")}
+try{await navigator.clipboard.writeText(inviteCode||"");$("copyCode").textContent="Copied!";setTimeout(()=>$("copyCode").textContent="Copy code",1500)}
+catch(_){say("settingsMsg","Select and copy the invitation code.")}
 };
-$("logoutBtn").onclick=logout;
-$("logoutSetup").onclick=logout;
+$("logoutBtn").onclick=logout;$("logoutSetup").onclick=logout;
 document.querySelectorAll("[data-tab]").forEach(b=>b.onclick=()=>switchTab(b.dataset.tab));
 document.querySelectorAll("[data-go]").forEach(b=>b.onclick=()=>switchTab(b.dataset.go));
-window.addEventListener("online",updateNetwork);
-window.addEventListener("offline",updateNetwork);
+window.addEventListener("online",updateNetwork);window.addEventListener("offline",updateNetwork);
 let r=await sb.auth.getSession();
-if(r.error){
-setView("auth");
-say("authMsg",friendlyError(r.error));
-return;
-}
-if(r.data.session){
-currentUser=r.data.session.user;
-await continueAfterLogin();
-}else setView("auth");
+if(r.error){setView("auth");say("authMsg",friendlyError(r.error));return}
+if(r.data.session){currentUser=r.data.session.user;await continueAfterLogin()}
+else setView("auth");
 sb.auth.onAuthStateChange((event,session)=>{
-if(event==="SIGNED_OUT"){
-currentUser=null;
-coupleId=null;
-setView("auth");
-}else if(session&&!currentUser){
-currentUser=session.user;
-setTimeout(()=>continueAfterLogin(),0);
-}
+if(event==="SIGNED_OUT"){currentUser=null;coupleId=null;setView("auth")}
+else if(session&&!currentUser){currentUser=session.user;setTimeout(()=>continueAfterLogin(),0)}
 });
 updateNetwork();
 }
-
 init();
 </script>
 </body>
