@@ -1,11 +1,12 @@
-
 {
+  "id": "./",
   "name": "Love Space",
   "short_name": "Love Space",
   "description": "A private galaxy for two.",
-  "start_url": "./",
+  "start_url": "./?refresh=final1",
   "scope": "./",
   "display": "standalone",
+  "orientation": "portrait",
   "background_color": "#09070b",
   "theme_color": "#09070b",
   "icons": [
