@@ -1,969 +1,1098 @@
-
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#09070b">
 <meta name="description" content="Love Space — a private galaxy for two.">
-<title>Love Space ❤️</title>
 <link rel="manifest" href="manifest.json">
-<link rel="icon" href="icon.svg" type="image/svg+xml">
+<title>Love Space</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
 <style>
-:root{
- --bg:#09070b;--panel:#151016;--panel2:#20141d;
- --red:#e3264e;--red2:#ff456b;--text:#fff4f6;
- --muted:#a99ba3;--border:rgba(255,255,255,.09)
-}
-*{box-sizing:border-box;margin:0;padding:0}
-body{background:var(--bg);color:var(--text);font-family:Arial,sans-serif;min-height:100vh;overflow-x:hidden}
+:root{--bg:#09070b;--panel:#151017;--panel2:#21151e;--red:#ef3154;--pink:#ff7894;--text:#fff5f7;--muted:#bbaab2;--line:#38232e;--green:#38d996}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(circle at 15% 5%,#351326 0,transparent 34%),radial-gradient(circle at 90% 35%,#21143a 0,transparent 32%),var(--bg);color:var(--text);font:15px system-ui,-apple-system,Segoe UI,sans-serif;min-height:100vh}
 button,input,textarea,select{font:inherit}
-button{cursor:pointer}
-#stars{position:fixed;inset:0;pointer-events:none;z-index:-1;background:radial-gradient(circle at 15% 20%,#55152a55,transparent 35%),radial-gradient(circle at 85% 75%,#35132e55,transparent 35%)}
-.star{position:absolute;width:2px;height:2px;border-radius:50%;background:white;animation:twinkle 3s infinite alternate}
-@keyframes twinkle{from{opacity:.2;transform:scale(.7)}to{opacity:1;transform:scale(1.5)}}
-header{padding:17px 20px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);background:#09070bdd;position:sticky;top:0;z-index:5;backdrop-filter:blur(15px)}
-.logo{font-size:23px;font-weight:bold;letter-spacing:1px}
-.logo span{color:var(--red2)}
-#accountName{color:var(--muted);font-size:12px}
-main{max-width:850px;margin:auto;padding:20px 15px 100px}
-.card{background:linear-gradient(145deg,#21131d,#100d13);border:1px solid var(--border);border-radius:20px;padding:20px;margin-bottom:17px;box-shadow:0 10px 35px #0005}
-h2{font-size:19px;margin-bottom:15px}
-h3{font-size:15px;margin-bottom:10px}
-p{color:var(--muted);line-height:1.5}
-input,textarea,select{width:100%;background:#0c090e;color:white;border:1px solid var(--border);border-radius:12px;padding:14px;outline:none;margin:7px 0}
-input:focus,textarea:focus,select:focus{border-color:var(--red)}
-textarea{resize:vertical}
-input[type=color]{height:52px;padding:5px}
-.btn{background:linear-gradient(120deg,#a91035,#f03760);border:0;color:white;padding:13px 17px;border-radius:12px;font-weight:bold;margin-top:8px}
-.btn.secondary{background:#30202b;border:1px solid var(--border)}
-.btn.full{width:100%}
-.btn:disabled{opacity:.5;cursor:wait}
-.small{font-size:12px;color:var(--muted)}
+button{border:0;border-radius:13px;padding:12px 15px;background:linear-gradient(120deg,var(--red),#a91c48);color:white;font-weight:700;cursor:pointer}
+button.secondary{background:#30202a;border:1px solid var(--line)}
+button.ghost{background:transparent;border:1px solid var(--line);padding:8px 10px}
+button:disabled{opacity:.5}
+.wrap{max-width:900px;margin:auto;padding:14px 13px 40px}
+.brand{text-align:center;padding:15px 0}
+.planet{font-size:36px}
+.brand h1{font-size:27px;letter-spacing:3px;margin:3px}
+.brand p,.muted{color:var(--muted)}
+.card{background:linear-gradient(145deg,rgba(35,22,32,.96),rgba(17,13,21,.96));border:1px solid var(--line);border-radius:21px;padding:17px;margin:12px 0;box-shadow:0 12px 35px #0005}
 .hidden{display:none!important}
-#authScreen{max-width:430px;margin:65px auto;padding:20px}
-.authLogo{text-align:center;font-size:35px;margin-bottom:12px}
-.authLogo span{color:var(--red2)}
-#authMessage{margin-top:12px;font-size:13px;color:#ff8099}
-.tabs{display:flex;gap:7px;overflow-x:auto;margin-bottom:18px;padding-bottom:5px}
-.tab{white-space:nowrap;padding:11px 15px;border-radius:12px;color:var(--muted);background:#18121a;border:1px solid var(--border)}
-.tab.active{background:#68172e;color:white;border-color:#a92a4a}
-.welcome{text-align:center;padding:25px 10px}
-.welcome .heart{font-size:45px;margin-bottom:12px}
-.welcome h2{font-size:25px}
-.chatArea{height:390px;overflow-y:auto;display:flex;flex-direction:column;gap:12px;padding:12px 3px;border-radius:12px;transition:background .2s;background-size:cover;background-position:center;background-repeat:no-repeat}
-.message{max-width:82%;padding:12px 15px;border-radius:17px;background:#2a202a;align-self:flex-start;overflow-wrap:anywhere}
-.message.mine{background:linear-gradient(135deg,#7c1937,#c5254d);align-self:flex-end}
-.message .sender{font-size:10px;color:#ffc2d0;margin-bottom:5px}
-.message .time{font-size:9px;color:#d7b9c3;text-align:right;margin-top:6px}
-.chatInput{display:flex;gap:8px;align-items:center}
-.chatInput input{margin:0}
-.chatInput button{flex-shrink:0}
-#musicList,#photoList,#videoList{display:grid;gap:10px;margin-top:12px}
-.mediaItem{padding:13px;background:#211923;border-radius:13px;border:1px solid var(--border);overflow-wrap:anywhere}
-.mediaItem audio,.mediaItem video{width:100%;margin-top:10px}
-.mediaItem img{width:100%;max-height:300px;object-fit:contain;border-radius:12px;margin-top:10px}
-.fileInput{margin:12px 0;font-size:12px}
-.player{text-align:center;padding:22px;background:linear-gradient(145deg,#411426,#170e19);border-radius:18px}
-.playerIcon{font-size:55px;margin-bottom:12px}
-#wallpaperPreview{height:125px;border-radius:12px;background:linear-gradient(135deg,#270d20,#721a36);margin:12px 0;background-size:cover;background-position:center;border:1px solid var(--border)}
-.status{font-size:12px;color:#e77a95;margin-top:8px;overflow-wrap:anywhere}
-.inviteCode{font-size:25px;letter-spacing:4px;color:#ff8099;font-weight:bold;margin:15px 0;overflow-wrap:anywhere}
-.empty{font-size:13px;color:var(--muted);padding:12px;text-align:center}
-footer{text-align:center;padding:25px;color:#786b75;font-size:11px}
-.mediaActions{display:flex;gap:8px;margin-top:10px}
-.mediaActions button{flex:1;margin-top:0}
-#photoViewer{position:fixed;inset:0;background:#050407f5;z-index:1000;display:none;align-items:center;justify-content:center;padding:15px}
-#photoViewer.open{display:flex}
-#photoViewer img{max-width:100%;max-height:88vh;object-fit:contain;border-radius:12px}
-#photoViewer button{position:absolute;top:20px;right:20px;background:#a91035;color:white;border:0;border-radius:50%;width:45px;height:45px;font-size:25px}
-@media(min-width:600px){main{padding-top:28px}#authScreen{margin-top:90px}}
+h2{font-size:19px;margin:0 0 12px}
+h3{margin:8px 0}
+.field{width:100%;background:#0d0a10;border:1px solid #49303d;color:white;border-radius:13px;padding:13px;margin:7px 0 12px;outline:none}
+.field:focus{border-color:var(--pink)}
+.row{display:flex;gap:8px;flex-wrap:wrap}
+.row>*{flex:1;min-width:0}
+.topline{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.small{font-size:12px}
+.status{min-height:20px;color:#ff9ab0;font-size:13px}
+.code{font-size:22px;letter-spacing:4px;color:#ff9ab0;font-weight:800;word-break:break-all}
+.tabs{display:flex;gap:7px;overflow:auto;padding:4px 0 10px}
+.tabs button{white-space:nowrap;flex:1;min-width:max-content}
+.messages{height:min(52vh,480px);min-height:260px;overflow:auto;background:#0c090f;border:1px solid var(--line);border-radius:16px;padding:12px;scroll-behavior:smooth}
+.bubble{max-width:86%;padding:10px 12px;margin:9px 0;border-radius:16px;background:#2b1d29;overflow-wrap:anywhere}
+.bubble.mine{margin-left:auto;background:linear-gradient(130deg,#a51d46,#67213d)}
+.bubble.deleted{opacity:.7;font-style:italic}
+.bubble small{display:flex;gap:6px;align-items:center;color:#e7bdca;font-size:11px;margin-bottom:4px}
+.bubble .body{white-space:pre-wrap}
+.bubble .tools{display:flex;gap:6px;margin-top:7px;justify-content:flex-end}
+.bubble .tools button{font-size:11px;padding:5px 8px}
+.ticks{margin-left:auto;font-size:12px;letter-spacing:-3px;padding-right:3px}
+.ticks.read{color:var(--green)}
+.mediaGrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(135px,1fr));gap:10px}
+.mediaItem{background:#0d0a10;border:1px solid var(--line);border-radius:13px;padding:8px;min-width:0}
+.mediaItem img,.mediaItem video{width:100%;max-height:190px;object-fit:cover;border-radius:9px}
+.mediaItem audio{width:100%}
+.mediaItem a{color:#ff9ab0;overflow-wrap:anywhere}
+.mediaItem button{width:100%;margin-top:7px}
+.pill{font-size:11px;color:var(--muted)}
+.footer{text-align:center;color:#806d78;font-size:12px;padding:18px}
+.online{color:var(--green)}
+.offline{color:#ffb65c}
+.sectionTitle{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.progress{height:5px;background:#38232e;border-radius:5px;overflow:hidden;margin-top:8px}
+.progress span{display:block;height:100%;width:0;background:var(--pink);transition:width .2s}
+@media(min-width:700px){.messages{height:430px}.wrap{padding-top:22px}}
 </style>
 </head>
-
 <body>
-<div id="stars"></div>
+<div class="wrap">
 
-<header>
- <div class="logo">LOVE <span>SPACE ♥</span></div>
- <div id="accountName">Our private universe</div>
+<header class="brand">
+<div class="planet">🪐</div>
+<h1>LOVE SPACE</h1>
+<p>One little universe. Just the two of you.</p>
 </header>
 
-<section id="authScreen">
- <div class="card" style="max-width:430px;margin:auto">
-  <div class="authLogo">🌌 <span>Love Space</span></div>
-  <div class="welcome">
-   <h2>Two hearts. One universe.</h2>
-   <p>A private space made for you two.</p>
-  </div>
-  <h3>Sign in or create your account</h3>
-  <input id="email" type="email" placeholder="Email address" autocomplete="email">
-  <input id="password" type="password" placeholder="Password (minimum 8 characters)" autocomplete="current-password">
-  <button class="btn full" onclick="authAction('login')">SIGN IN</button>
-  <button class="btn secondary full" onclick="authAction('signup')">CREATE ACCOUNT</button>
-  <p id="authMessage"></p>
-  <p class="small" style="margin-top:12px">Both of you must use separate accounts.</p>
- </div>
-</section>
-
-<section id="setupScreen" class="hidden">
- <main>
-  <div class="card welcome">
-   <div class="heart">❤️</div>
-   <h2>Make it ours 🪐</h2>
-   <p>Choose your name, then create your shared universe or join your partner's.</p>
-  </div>
-  <div class="card">
-   <h2>Your name</h2>
-   <input id="nickname" maxlength="25" placeholder="Your name or nickname">
-   <button class="btn full" id="createSpaceBtn" onclick="createSpace()">CREATE OUR SPACE</button>
-   <p class="small" style="text-align:center;margin:15px">— OR JOIN YOUR PARTNER —</p>
-   <input id="inviteCodeInput" placeholder="Enter invitation code">
-   <button class="btn secondary full" id="joinSpaceBtn" onclick="joinSpace()">JOIN WITH CODE</button>
-   <p id="setupMessage" class="status"></p>
-   <button class="btn secondary full" onclick="logout()">SIGN OUT</button>
-  </div>
- </main>
-</section>
-
-<section id="appScreen" class="hidden">
- <main>
-  <div class="card welcome">
-   <div class="heart">❤️</div>
-   <h2>Welcome to our universe</h2>
-   <p>A little galaxy where it's always you and me.</p>
-   <p id="partnerStatus" class="status">Connecting to your universe...</p>
-  </div>
-
-  <div class="card">
-   <h2>Our invitation 🌹</h2>
-   <p class="small">Share this code privately with your partner. They need their own account to join.</p>
-   <div id="inviteDisplay" class="inviteCode">Loading...</div>
-   <button class="btn secondary full" onclick="copyInvite()">COPY INVITATION CODE</button>
-   <p id="inviteStatus" class="status"></p>
-  </div>
-
-  <div class="tabs">
-   <button class="tab active" onclick="showTab('home',this)">🏠 Home</button>
-   <button class="tab" onclick="showTab('chat',this)">💬 Chat</button>
-   <button class="tab" onclick="showTab('music',this)">🎵 Music</button>
-   <button class="tab" onclick="showTab('photos',this)">📸 Photos</button>
-   <button class="tab" onclick="showTab('videos',this)">🎬 Videos</button>
-   <button class="tab" onclick="showTab('settings',this)">⚙️ Settings</button>
-  </div>
-
-  <section id="home" class="tabContent">
-   <div class="card">
-    <h2>Our little universe 🌌</h2>
-    <p>This is our private place. Share memories, messages, pictures and music.</p>
-    <button id="installBtn" class="btn full hidden" onclick="installApp()">INSTALL LOVE SPACE</button>
-    <p id="installStatus" class="status"></p>
-   </div>
-   <div class="card player">
-    <div class="playerIcon">🎧</div>
-    <h2>Our music universe</h2>
-    <p>Every song has a memory.</p>
-    <button class="btn" onclick="showTabById('music')">OPEN MUSIC</button>
-   </div>
-   <div class="card">
-    <h2>Our memories ❤️</h2>
-    <p>Every photo and video we share stays in our space.</p>
-   </div>
-  </section>
-
-  <section id="chat" class="tabContent hidden">
-   <div class="card">
-    <h2>Our private chat 💬</h2>
-    <div id="chatMessages" class="chatArea"></div>
-    <div class="chatInput" style="margin-top:10px">
-     <input id="chatInput" placeholder="Write something sweet..." maxlength="2000">
-     <button class="btn" onclick="sendMessage()">➤</button>
-    </div>
-    <p id="chatStatus" class="status"></p>
-   </div>
-  </section>
-
-  <section id="music" class="tabContent hidden">
-   <div class="card">
-    <h2>Our music library 🎵</h2>
-    <p>Upload songs to your shared library. Playback controls are synchronized when both phones have the same song open.</p>
-    <input class="fileInput" type="file" id="musicFile" accept="audio/*">
-    <button class="btn full" onclick="uploadMedia('music')">UPLOAD SONG</button>
-    <p id="musicStatus" class="status"></p>
-    <div id="musicList"></div>
-   </div>
-  </section>
-
-  <section id="photos" class="tabContent hidden">
-   <div class="card">
-    <h2>Our photo memories 📸</h2>
-    <input class="fileInput" type="file" id="photoFile" accept="image/*" multiple>
-    <button class="btn full" onclick="uploadMedia('photos')">SHARE PHOTOS</button>
-    <p id="photoStatus" class="status"></p>
-    <div id="photoList"></div>
-   </div>
-  </section>
-
-  <section id="videos" class="tabContent hidden">
-   <div class="card">
-    <h2>Our movie corner 🎬</h2>
-    <p>Playback controls synchronize when both phones have the same video open.</p>
-    <input class="fileInput" type="file" id="videoFile" accept="video/*">
-    <button class="btn full" onclick="uploadMedia('videos')">UPLOAD VIDEO</button>
-    <p id="videoStatus" class="status"></p>
-    <div id="videoList"></div>
-   </div>
-  </section>
-
-  <section id="settings" class="tabContent hidden">
-   <div class="card">
-    <h2>Our space settings ⚙️</h2>
-    <h3>Shared chat wallpaper</h3>
-    <div id="wallpaperPreview"></div>
-    <p class="small">Choose a colour or upload a photo to share as your wallpaper.</p>
-    <input type="color" id="wallpaperColor" value="#270d20">
-    <button class="btn full" onclick="saveWallpaper()">USE COLOUR</button>
-    <input type="file" id="wallpaperFile" accept="image/*" class="fileInput">
-    <button class="btn secondary full" onclick="uploadWallpaper()">USE PHOTO AS WALLPAPER</button>
-    <button class="btn secondary full" onclick="removePhotoWallpaper()">REMOVE PHOTO WALLPAPER</button>
-    <p id="settingsStatus" class="status"></p>
-   </div>
-   <div class="card">
-    <h2>Account</h2>
-    <p id="userEmail"></p>
-    <button class="btn secondary full" onclick="logout()">SIGN OUT</button>
-   </div>
-  </section>
- </main>
-</section>
-
-<div id="photoViewer" onclick="closePhotoViewer()">
- <button onclick="closePhotoViewer()">×</button>
- <img id="fullPhoto" alt="Full-screen shared photo">
+<section id="authView" class="card hidden">
+<h2>Enter your universe</h2>
+<input id="email" class="field" type="email" autocomplete="email" placeholder="Email address">
+<input id="password" class="field" type="password" autocomplete="current-password" placeholder="Password (at least 8 characters)">
+<div class="row">
+<button id="loginBtn">Log in</button>
+<button id="signupBtn" class="secondary">Create account</button>
 </div>
+<p id="authMsg" class="status"></p>
+<p class="muted small">Create an account on your phone, then Eddi creates her own account on hers.</p>
+</section>
 
-<footer>Made with ❤️ for two hearts, one universe.</footer>
+<section id="setupView" class="card hidden">
+<h2>Make it ours 🪐</h2>
+<input id="nickname" class="field" maxlength="25" placeholder="Your name or nickname">
+<button id="createBtn" style="width:100%">Create our space</button>
+<p class="muted" style="text-align:center">— OR JOIN YOUR PARTNER'S SPACE —</p>
+<input id="inviteInput" class="field" maxlength="20" placeholder="Invitation code">
+<button id="joinBtn" class="secondary" style="width:100%">Join with code</button>
+<p id="setupMsg" class="status"></p>
+<button id="logoutSetup" class="secondary">Log out</button>
+</section>
+
+<main id="appView" class="hidden">
+
+<section class="card">
+<div class="topline">
+<div>
+<div class="muted small">YOUR PRIVATE UNIVERSE</div>
+<h2 id="spaceTitle">Our Universe</h2>
+</div>
+<div>
+<span id="netState" class="pill">Checking connection…</span>
+<button id="logoutBtn" class="secondary">Log out</button>
+</div>
+</div>
+<div class="muted small">Your private invitation code</div>
+<div class="row" style="align-items:center">
+<div id="inviteCode" class="code">------</div>
+<button id="copyCode" class="secondary">Copy code</button>
+</div>
+<p class="muted small">Share this code privately. Your space is limited to two accounts.</p>
+</section>
+
+<nav class="tabs">
+<button data-tab="homePanel">Home ✨</button>
+<button data-tab="chatPanel" class="secondary">Chat 💬</button>
+<button data-tab="mediaPanel" class="secondary">Memories 📸</button>
+<button data-tab="musicPanel" class="secondary">Music 🎵</button>
+<button data-tab="settingsPanel" class="secondary">Space ⚙️</button>
+</nav>
+
+<section id="homePanel" class="card">
+<h2>Welcome back to your universe 💗</h2>
+<p class="muted">A little space that belongs to both of you.</p>
+<div class="row">
+<button data-go="chatPanel">Open our chat</button>
+<button class="secondary" data-go="mediaPanel">View memories</button>
+</div>
+<p class="muted small">Messages sync when you're online. Messages you send offline are queued on this phone and sent when connection returns.</p>
+</section>
+
+<section id="chatPanel" class="card hidden">
+<div class="sectionTitle">
+<h2>Just us 💗</h2>
+<span class="pill" id="chatStatus">Private chat</span>
+</div>
+<div id="messages" class="messages" aria-live="polite"></div>
+<textarea id="messageInput" class="field" rows="2" maxlength="2000" placeholder="Send a message…"></textarea>
+<div class="row">
+<button id="sendBtn">Send message</button>
+<button id="refreshBtn" class="secondary">Refresh</button>
+</div>
+<p id="chatMsg" class="status"></p>
+<p class="muted small">✓ Sent · <span style="color:var(--green)">✓✓</span> Read by your partner</p>
+</section>
+
+<section id="mediaPanel" class="card hidden">
+<h2>Our memories 📸</h2>
+<p class="muted small">Share photos and videos with each other.</p>
+<input id="photoVideoFile" class="field" type="file" accept="image/*,video/*">
+<button id="uploadMemory" style="width:100%">Upload memory</button>
+<div class="progress"><span id="memoryProgress"></span></div>
+<p id="mediaMsg" class="status"></p>
+<div id="memories" class="mediaGrid"></div>
+</section>
+
+<section id="musicPanel" class="card hidden">
+<h2>Our soundtrack 🎧</h2>
+<p class="muted small">Songs in your shared library. Playback is controlled separately on each phone.</p>
+<input id="musicFile" class="field" type="file" accept="audio/*">
+<button id="uploadMusic" style="width:100%">Add song to our library</button>
+<div class="progress"><span id="musicProgress"></span></div>
+<p id="musicMsg" class="status"></p>
+<div id="songs" class="mediaGrid"></div>
+</section>
+
+<section id="settingsPanel" class="card hidden">
+<h2>Make it feel like us ✨</h2>
+<label class="muted" for="wallpaper">Shared atmosphere</label>
+<select id="wallpaper" class="field">
+<option value="galaxy">Deep galaxy</option>
+<option value="rose">Rose nebula</option>
+<option value="midnight">Midnight</option>
+<option value="red">Crimson orbit</option>
+</select>
+<button id="saveWallpaper" style="width:100%">Save shared wallpaper</button>
+<p id="settingsMsg" class="status"></p>
+<p class="muted small">Offline copies are stored only on this phone. Sign out on shared devices.</p>
+</section>
+
+</main>
+<div class="footer">LOVE SPACE · MADE FOR TWO</div>
+</div>
 
 <script>
 "use strict";
 
-/* SUPABASE PROJECT */
 const SUPABASE_URL="https://oiwmbgszcesiflpjooap.supabase.co";
 const SUPABASE_KEY="sb_publishable_OiquM_qONAjwK5khLen1Tw_7GEvFe53";
 
-let sb=null,currentUser=null,coupleId=null,inviteCode=null;
-let nickname=localStorage.getItem("love_nickname")||"";
-let chatChannel=null,spaceChannel=null;
-let activeTab="home",remotePlayback=false;
-let mediaElements=new Map(),lastSyncSent=new Map();
-let installPrompt=null;
-
 const $=id=>document.getElementById(id);
-const say=(id,message)=>{if($(id))$(id).textContent=message||""};
+const show=(id,yes)=>$(id).classList.toggle("hidden",!yes);
+const say=(id,msg)=>{$(id).textContent=msg||""};
 
-function showScreen(screen){
- $("authScreen").classList.toggle("hidden",screen!=="auth");
- $("setupScreen").classList.toggle("hidden",screen!=="setup");
- $("appScreen").classList.toggle("hidden",screen!=="app");
+const nicknameKey="love_nickname";
+const queueKey="love_space_pending_";
+
+let sb;
+let currentUser=null;
+let coupleId=null;
+let inviteCode=null;
+let messageSubscription=null;
+let currentNickname=localStorage.getItem(nicknameKey)||"";
+let messagesById=new Map();
+let loadingMessages=false;
+
+function setView(v){
+show("authView",v==="auth");
+show("setupView",v==="setup");
+show("appView",v==="app");
 }
 
-function errorText(error){
- let m=error?.message||String(error||"Unknown error");
- if(m.includes("Invalid login credentials"))return "Incorrect email or password.";
- if(m.includes("User already registered"))return "This email already has an account. Sign in instead.";
- if(m.toLowerCase().includes("already belongs"))return "This account already belongs to a Love Space. Sign in using the account already connected to it.";
- if(m.toLowerCase().includes("full"))return "This Love Space already has two members.";
- return m;
+function friendlyError(e){
+let m=e?.message||String(e||"Unknown error");
+if(m.includes("Invalid login credentials"))return "Email or password is incorrect.";
+if(m.includes("User already registered"))return "This email already has an account. Log in instead.";
+if(m.includes("already belongs"))return "This account is already connected to a Love Space.";
+if(m.includes("full")||m.includes("two members"))return "This Love Space already has two members.";
+return m;
 }
 
-function initSupabase(){
- if(!window.supabase){
-  say("authMessage","Supabase could not load. Check your internet connection and reload.");
-  return false;
- }
- if(!sb)sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
- return true;
-}
-
-/* AUTH */
 async function authAction(kind){
- if(!initSupabase())return;
- const email=$("email").value.trim();
- const password=$("password").value;
- if(!email||password.length<8){
-  say("authMessage","Enter your email and a password with at least 8 characters.");
-  return;
- }
- say("authMessage","Please wait...");
- try{
-  const result=kind==="signup"
-   ?await sb.auth.signUp({email,password})
-   :await sb.auth.signInWithPassword({email,password});
-  if(result.error)throw result.error;
-  if(kind==="signup"&&!result.data.session){
-   say("authMessage","Account created. Confirm your email, then sign in.");
-   return;
-  }
-  currentUser=result.data.user;
-  await continueLogin();
- }catch(e){say("authMessage",errorText(e))}
+let email=$("email").value.trim();
+let password=$("password").value;
+
+if(!email||password.length<8){
+say("authMsg","Enter your email and a password with at least 8 characters.");
+return;
 }
 
-async function continueLogin(){
- if(!currentUser)return;
- const {data,error}=await sb.from("love_couple_members")
-  .select("couple_id").eq("user_id",currentUser.id).maybeSingle();
- if(error)throw error;
- if(data?.couple_id){
-  coupleId=data.couple_id;
-  await enterApp();
- }else{
-  $("nickname").value=nickname;
-  showScreen("setup");
- }
+say("authMsg",kind==="signup"?"Creating account…":"Logging in…");
+
+try{
+let r=kind==="signup"
+?await sb.auth.signUp({email,password})
+:await sb.auth.signInWithPassword({email,password});
+
+if(r.error)throw r.error;
+
+if(kind==="signup"&&!r.data.session){
+say("authMsg","Account created. Check your email to confirm it, then log in.");
+return;
 }
 
-/* CREATE OR JOIN */
+currentUser=r.data.user;
+await continueAfterLogin();
+
+}catch(e){
+say("authMsg",friendlyError(e));
+}
+}
+
+async function continueAfterLogin(){
+let {data,error}=await sb.from("love_couple_members")
+.select("couple_id")
+.eq("user_id",currentUser.id)
+.maybeSingle();
+
+if(error){
+setView("setup");
+say("setupMsg",friendlyError(error));
+return;
+}
+
+if(data?.couple_id){
+coupleId=data.couple_id;
+await loadSpace();
+}else{
+$("nickname").value=currentNickname;
+setView("setup");
+}
+}
+
 async function createSpace(){
- nickname=$("nickname").value.trim().slice(0,25);
- if(!nickname){say("setupMessage","Enter your name or nickname first.");return}
- localStorage.setItem("love_nickname",nickname);
- $("createSpaceBtn").disabled=true;
- say("setupMessage","Creating your universe...");
- try{
-  const {data,error}=await sb.rpc("create_love_couple");
-  if(error)throw error;
-  const result=Array.isArray(data)?data[0]:data;
-  if(!result?.couple_id)throw new Error("The database did not return your space ID.");
-  coupleId=result.couple_id;
-  inviteCode=result.invite_code||null;
-  await enterApp();
- }catch(e){say("setupMessage",errorText(e))}
- finally{$("createSpaceBtn").disabled=false}
+let name=$("nickname").value.trim();
+
+if(!name){
+say("setupMsg","Choose your name or nickname first.");
+return;
+}
+
+currentNickname=name.slice(0,25);
+localStorage.setItem(nicknameKey,currentNickname);
+say("setupMsg","Creating your universe…");
+$("createBtn").disabled=true;
+
+try{
+let r=await sb.rpc("create_love_couple");
+if(r.error)throw r.error;
+
+let d=Array.isArray(r.data)?r.data[0]:r.data;
+
+if(!d?.couple_id||!d?.invite_code){
+throw Error("The database did not return the new space details.");
+}
+
+coupleId=d.couple_id;
+inviteCode=d.invite_code;
+await loadSpace();
+
+}catch(e){
+say("setupMsg",friendlyError(e));
+}finally{
+$("createBtn").disabled=false;
+}
 }
 
 async function joinSpace(){
- nickname=$("nickname").value.trim().slice(0,25);
- const code=$("inviteCodeInput").value.trim();
- if(!nickname){say("setupMessage","Enter your name or nickname first.");return}
- if(!code){say("setupMessage","Enter your partner's invitation code.");return}
- localStorage.setItem("love_nickname",nickname);
- $("joinSpaceBtn").disabled=true;
- say("setupMessage","Joining your universe...");
- try{
-  const {data,error}=await sb.rpc("join_love_couple",{p_invite_code:code});
-  if(error)throw error;
-  if(!data)throw new Error("The database did not return your space ID.");
-  coupleId=data;
-  await enterApp();
- }catch(e){say("setupMessage",errorText(e))}
- finally{$("joinSpaceBtn").disabled=false}
+let name=$("nickname").value.trim();
+let code=$("inviteInput").value.trim();
+
+if(!name||!code){
+say("setupMsg","Enter your nickname and invitation code.");
+return;
 }
 
-/* LOAD THE SPACE */
-async function enterApp(){
- const {data:members,error:memberError}=await sb.from("love_couple_members")
-  .select("user_id").eq("couple_id",coupleId);
- if(memberError)throw memberError;
- if(!members?.some(m=>m.user_id===currentUser.id))
-  throw new Error("This account is not a member of this Love Space.");
+currentNickname=name.slice(0,25);
+localStorage.setItem(nicknameKey,currentNickname);
+say("setupMsg","Joining your universe…");
+$("joinBtn").disabled=true;
 
- const {data:space,error:spaceError}=await sb.from("love_couples")
-  .select("name,invite_code").eq("id",coupleId).single();
- if(spaceError)throw spaceError;
+try{
+let r=await sb.rpc("join_love_couple",{p_invite_code:code});
+if(r.error)throw r.error;
+if(!r.data)throw Error("The database did not return a space ID.");
 
- inviteCode=space.invite_code||null;
- $("inviteDisplay").textContent=inviteCode||"CODE NOT FOUND";
- $("accountName").textContent=nickname||currentUser.email;
- $("userEmail").textContent=currentUser.email;
- say("inviteStatus",inviteCode?"Share this code with your partner.":"Could not retrieve the invitation code. Please contact support before creating another space.");
+coupleId=r.data;
+await loadSpace();
 
- showScreen("app");
-
- await Promise.allSettled([
-  loadMessages(),loadMedia(),loadWallpaper(),checkPartner()
- ]);
- subscribeMessages();
- subscribeSpace();
+}catch(e){
+say("setupMsg",friendlyError(e));
+}finally{
+$("joinBtn").disabled=false;
+}
 }
 
-/* INVITATION */
-async function copyInvite(){
- if(!inviteCode){
-  say("inviteStatus","No invitation code was returned by the database.");
-  return;
- }
- try{
-  await navigator.clipboard.writeText(inviteCode);
-  say("inviteStatus","Invitation code copied. Send it privately to your partner ❤️");
- }catch(e){
-  say("inviteStatus","Your invitation code is: "+inviteCode);
- }
+async function loadSpace(){
+if(!coupleId)throw Error("Missing Love Space ID.");
+
+let m=await sb.from("love_couple_members")
+.select("user_id")
+.eq("couple_id",coupleId);
+
+if(m.error)throw m.error;
+
+if(!m.data?.some(x=>x.user_id===currentUser.id)){
+throw Error("This account is not a member of this Love Space.");
 }
 
-async function checkPartner(){
- const {data,error}=await sb.from("love_couple_members")
-  .select("user_id").eq("couple_id",coupleId);
- if(error){say("partnerStatus","Your universe is open ❤️");return}
- say("partnerStatus",data.length>=2
-  ?"Both hearts are connected to this universe ❤️"
-  :"Waiting for your other half to join ❤️");
+let s=await sb.from("love_couples")
+.select("name,invite_code")
+.eq("id",coupleId)
+.single();
+
+if(s.error)throw s.error;
+
+inviteCode=s.data.invite_code;
+$("spaceTitle").textContent=s.data.name||"Our Universe";
+$("inviteCode").textContent=inviteCode||"------";
+
+setView("app");
+
+await Promise.all([
+loadMessages(),
+loadMedia(),
+loadWallpaper()
+]);
+
+subscribeToMessages();
+await flushQueue();
+updateNetwork();
 }
 
-/* NAVIGATION */
-function showTab(name,button){
- activeTab=name;
- document.querySelectorAll(".tabContent").forEach(el=>el.classList.add("hidden"));
- document.querySelectorAll(".tab").forEach(el=>el.classList.remove("active"));
- $(name).classList.remove("hidden");
- button.classList.add("active");
- if(["music","photos","videos"].includes(name))loadMedia();
+function parseContent(raw){
+try{
+return JSON.parse(raw);
+}catch(_){
+return {nickname:"Partner",text:raw};
 }
-
-function showTabById(name){
- const button=[...document.querySelectorAll(".tab")]
-  .find(b=>b.getAttribute("onclick")?.includes("'"+name+"'"));
- if(button)showTab(name,button);
-}
-
-/* CHAT */
-function decodeMessage(content){
- try{
-  const parsed=JSON.parse(content);
-  if(parsed&&typeof parsed==="object")
-   return {nickname:parsed.nickname||"Partner",text:parsed.text||""};
- }catch(e){}
- return {nickname:"Partner",text:content||""};
-}
-
-function renderMessage(message){
- const parsed=decodeMessage(message.content);
- const item=document.createElement("div");
- item.className="message"+(message.user_id===currentUser.id?" mine":"");
- const sender=document.createElement("div");
- sender.className="sender";
- sender.textContent=message.user_id===currentUser.id
-  ?(parsed.nickname||nickname||"YOU")
-  :(parsed.nickname||"YOUR PERSON");
- const body=document.createElement("div");
- body.textContent=parsed.text;
- const time=document.createElement("div");
- time.className="time";
- time.textContent=new Date(message.created_at).toLocaleString();
- item.append(sender,body,time);
- $("chatMessages").appendChild(item);
 }
 
 async function loadMessages(){
- const {data,error}=await sb.from("love_messages")
-  .select("id,user_id,content,created_at")
-  .eq("couple_id",coupleId)
-  .order("created_at",{ascending:true}).limit(150);
- if(error){say("chatStatus",errorText(error));return}
- $("chatMessages").replaceChildren();
- (data||[]).forEach(renderMessage);
- scrollChat();
+if(loadingMessages||!coupleId)return;
+
+loadingMessages=true;
+
+try{
+let r=await sb.from("love_messages")
+.select("id,user_id,content,created_at,edited_at,deleted_at,deleted_by")
+.eq("couple_id",coupleId)
+.order("created_at",{ascending:true})
+.limit(150);
+
+if(r.error)throw r.error;
+
+messagesById.clear();
+(r.data||[]).forEach(x=>messagesById.set(x.id,x));
+
+await renderMessages();
+await markPartnerMessagesRead(r.data||[]);
+
+}catch(e){
+say("chatMsg",friendlyError(e));
+}finally{
+loadingMessages=false;
+}
 }
 
-function subscribeMessages(){
- if(chatChannel)sb.removeChannel(chatChannel);
- chatChannel=sb.channel("love-chat-"+coupleId)
-  .on("postgres_changes",{
-   event:"INSERT",schema:"public",table:"love_messages",
-   filter:"couple_id=eq."+coupleId
-  },payload=>{
-   if(payload.new.user_id!==currentUser.id){
-    renderMessage(payload.new);scrollChat();
-   }
-  }).subscribe(status=>{
-   if(status==="CHANNEL_ERROR")say("chatStatus","Chat connection interrupted. Check your internet.");
-  });
+async function renderMessages(){
+let box=$("messages");
+box.innerHTML="";
+
+let rows=[...messagesById.values()]
+.sort((a,b)=>new Date(a.created_at)-new Date(b.created_at));
+
+let partner=await sb.from("love_couple_members")
+.select("user_id")
+.eq("couple_id",coupleId)
+.neq("user_id",currentUser.id)
+.maybeSingle();
+
+let partnerUserId=partner.data?.user_id||null;
+
+let ownIds=rows
+.filter(x=>x.user_id===currentUser.id&&!x.deleted_at)
+.map(x=>x.id);
+
+let read=new Set();
+
+if(partnerUserId&&ownIds.length){
+let rr=await sb.from("love_message_receipts")
+.select("message_id")
+.eq("couple_id",coupleId)
+.eq("reader_id",partnerUserId)
+.in("message_id",ownIds);
+
+if(!rr.error){
+(rr.data||[]).forEach(x=>read.add(x.message_id));
+}
+}
+
+rows.forEach(row=>{
+let p=parseContent(row.content);
+let mine=row.user_id===currentUser.id;
+
+let div=document.createElement("div");
+div.className="bubble"+(mine?" mine":"")+(row.deleted_at?" deleted":"");
+
+let head=document.createElement("small");
+let name=document.createElement("span");
+name.textContent=p.nickname||"Partner";
+head.append(name);
+
+if(row.edited_at&&!row.deleted_at){
+let ed=document.createElement("span");
+ed.textContent="edited";
+head.append(ed);
+}
+
+if(mine&&!row.deleted_at){
+let tick=document.createElement("span");
+tick.className="ticks"+(read.has(row.id)?" read":"");
+tick.textContent=read.has(row.id)?"✓✓":"✓";
+tick.title=read.has(row.id)?"Read":"Sent";
+head.append(tick);
+}
+
+let body=document.createElement("div");
+body.className="body";
+body.textContent=row.deleted_at?"This message was deleted":p.text||"";
+
+div.append(head,body);
+
+if(mine&&!row.deleted_at){
+let tools=document.createElement("div");
+tools.className="tools";
+
+let edit=document.createElement("button");
+edit.className="ghost";
+edit.textContent="Edit";
+edit.onclick=()=>editMessage(row);
+
+let del=document.createElement("button");
+del.className="ghost";
+del.textContent="Delete";
+del.onclick=()=>deleteMessage(row);
+
+tools.append(edit,del);
+div.append(tools);
+}
+
+box.append(div);
+});
+
+box.scrollTop=box.scrollHeight;
+}
+
+async function editMessage(row){
+let p=parseContent(row.content);
+let next=prompt("Edit your message",p.text||"");
+
+if(next===null)return;
+
+next=next.trim();
+
+if(!next){
+alert("A message cannot be empty.");
+return;
+}
+
+let content=JSON.stringify({...p,text:next});
+
+let r=await sb.from("love_messages")
+.update({content,edited_at:new Date().toISOString()})
+.eq("id",row.id)
+.eq("user_id",currentUser.id);
+
+if(r.error){
+say("chatMsg",friendlyError(r.error));
+return;
+}
+
+row.content=content;
+row.edited_at=new Date().toISOString();
+messagesById.set(row.id,row);
+
+await renderMessages();
+say("chatMsg","Message updated.");
+}
+
+async function deleteMessage(row){
+if(!confirm("Delete this message for both of you?"))return;
+
+let r=await sb.from("love_messages")
+.update({
+deleted_at:new Date().toISOString(),
+deleted_by:currentUser.id
+})
+.eq("id",row.id)
+.eq("user_id",currentUser.id);
+
+if(r.error){
+say("chatMsg",friendlyError(r.error));
+return;
+}
+
+row.deleted_at=new Date().toISOString();
+row.deleted_by=currentUser.id;
+messagesById.set(row.id,row);
+
+await renderMessages();
+say("chatMsg","Message deleted for both of you.");
+}
+
+function subscribeToMessages(){
+if(messageSubscription){
+sb.removeChannel(messageSubscription);
+}
+
+messageSubscription=sb.channel("love-messages-"+coupleId)
+.on("postgres_changes",{
+event:"*",
+schema:"public",
+table:"love_messages",
+filter:"couple_id=eq."+coupleId
+},async payload=>{
+
+if(payload.eventType==="DELETE"){
+messagesById.delete(payload.old.id);
+}else if(payload.new){
+messagesById.set(payload.new.id,payload.new);
+}
+
+await renderMessages();
+
+if(payload.new?.user_id!==currentUser.id){
+await markPartnerMessagesRead([payload.new]);
+}
+
+})
+.on("postgres_changes",{
+event:"*",
+schema:"public",
+table:"love_message_receipts",
+filter:"couple_id=eq."+coupleId
+},()=>renderMessages())
+.subscribe();
+}
+
+async function markPartnerMessagesRead(rows){
+let unseen=rows.filter(x=>
+x.user_id!==currentUser.id&&!x.deleted_at
+);
+
+if(!unseen.length||!navigator.onLine)return;
+
+let data=unseen.map(x=>({
+message_id:x.id,
+couple_id:coupleId,
+reader_id:currentUser.id
+}));
+
+let r=await sb.from("love_message_receipts")
+.upsert(data,{
+onConflict:"message_id,reader_id",
+ignoreDuplicates:true
+});
+
+if(r.error){
+console.warn("Read receipt:",r.error.message);
+}
+}
+
+function pending(){
+try{
+return JSON.parse(localStorage.getItem(queueKey+coupleId)||"[]");
+}catch(_){
+return [];
+}
+}
+
+function savePending(q){
+localStorage.setItem(queueKey+coupleId,JSON.stringify(q));
 }
 
 async function sendMessage(){
- const text=$("chatInput").value.trim();
- if(!text)return;
- $("chatInput").disabled=true;
- try{
-  const {data,error}=await sb.from("love_messages").insert({
-   couple_id:coupleId,user_id:currentUser.id,
-   content:JSON.stringify({nickname:nickname||"Partner",text})
-  }).select().single();
-  if(error)throw error;
-  renderMessage(data);scrollChat();
-  $("chatInput").value="";
-  say("chatStatus","");
- }catch(e){say("chatStatus",errorText(e))}
- finally{$("chatInput").disabled=false}
-}
+let text=$("messageInput").value.trim();
 
-function scrollChat(){
- $("chatMessages").scrollTop=$("chatMessages").scrollHeight;
-}
+if(!text)return;
 
-$("chatInput").addEventListener("keydown",e=>{
- if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();sendMessage()}
+let content=JSON.stringify({
+nickname:currentNickname||"Partner",
+text
 });
 
-/* MEDIA LIBRARY */
-const buckets={music:"love-music",photos:"love-photos",videos:"love-videos"};
-const mediaType=type=>type==="photos"?"photo":type==="videos"?"video":"music";
-
-async function uploadMedia(type){
- const input=$(type==="music"?"musicFile":type==="photos"?"photoFile":"videoFile");
- const files=[...input.files];
- const statusId=type==="music"?"musicStatus":type==="photos"?"photoStatus":"videoStatus";
- if(!files.length){say(statusId,"Choose a file first.");return}
- for(const file of files){
-  if(file.size>100*1024*1024){
-   say(statusId,file.name+" is larger than 100 MB.");return;
-  }
-  say(statusId,"Uploading "+file.name+"...");
-  const safeName=file.name.replace(/[^a-zA-Z0-9._-]/g,"_");
-  const path=coupleId+"/"+Date.now()+"-"+crypto.randomUUID()+"-"+safeName;
-  const {error:uploadError}=await sb.storage.from(buckets[type])
-   .upload(path,file,{upsert:false,contentType:file.type||"application/octet-stream"});
-  if(uploadError){say(statusId,"Upload failed: "+uploadError.message);return}
-  const {error:rowError}=await sb.from("love_media").insert({
-   couple_id:coupleId,user_id:currentUser.id,
-   type:mediaType(type),path,name:file.name
-  });
-  if(rowError){
-   await sb.storage.from(buckets[type]).remove([path]);
-   say(statusId,"Library record failed: "+rowError.message);return;
-  }
- }
- input.value="";
- say(statusId,"Shared successfully ❤️");
- await loadMedia();
- if(spaceChannel)spaceChannel.send({type:"broadcast",event:"media-added",payload:{senderId:currentUser.id}});
+if(!navigator.onLine){
+let q=pending();
+q.push({content,created_at:new Date().toISOString()});
+savePending(q);
+$("messageInput").value="";
+say("chatMsg","Saved on this phone. It will send when you're online.");
+return;
 }
 
-/* LOAD MEDIA AND BUILD CARDS */
+$("sendBtn").disabled=true;
+
+try{
+let r=await sb.from("love_messages")
+.insert({
+couple_id:coupleId,
+user_id:currentUser.id,
+content
+})
+.select()
+.single();
+
+if(r.error)throw r.error;
+
+messagesById.set(r.data.id,r.data);
+await renderMessages();
+
+$("messageInput").value="";
+say("chatMsg","");
+
+}catch(e){
+
+if(!navigator.onLine){
+let q=pending();
+q.push({content,created_at:new Date().toISOString()});
+savePending(q);
+$("messageInput").value="";
+say("chatMsg","Connection lost. Message saved to send later.");
+}else{
+say("chatMsg",friendlyError(e));
+}
+
+}finally{
+$("sendBtn").disabled=false;
+}
+}
+
+async function flushQueue(){
+if(!navigator.onLine||!coupleId)return;
+
+let q=pending();
+if(!q.length)return;
+
+let left=[];
+
+for(let i=0;i<q.length;i++){
+let item=q[i];
+
+let r=await sb.from("love_messages")
+.insert({
+couple_id:coupleId,
+user_id:currentUser.id,
+content:item.content
+});
+
+if(r.error){
+left=q.slice(i);
+break;
+}
+}
+
+savePending(left);
+
+if(!left.length){
+say("chatMsg","Your offline messages have been sent.");
+await loadMessages();
+}
+}
+
+function fileKind(f){
+if(f.type.startsWith("image/"))return "photo";
+if(f.type.startsWith("video/"))return "video";
+if(f.type.startsWith("audio/"))return "music";
+return null;
+}
+
+async function uploadFile(file,type,progressId){
+if(!file)throw Error("Choose a file first.");
+
+if(file.size>100*1024*1024){
+throw Error("Choose a file smaller than 100 MB.");
+}
+
+let ext=(file.name.split(".").pop()||"file")
+.replace(/[^a-zA-Z0-9]/g,"")
+.slice(0,10);
+
+let path=coupleId+"/"+Date.now()+"-"+crypto.randomUUID()+"."+ext;
+
+let bucket=type==="music"
+?"love-music"
+:type==="photo"
+?"love-photos"
+:"love-videos";
+
+$(progressId).style.width="15%";
+
+let u=await sb.storage.from(bucket).upload(path,file,{
+upsert:false,
+contentType:file.type||"application/octet-stream"
+});
+
+if(u.error)throw u.error;
+
+$(progressId).style.width="75%";
+
+let r=await sb.from("love_media").insert({
+couple_id:coupleId,
+user_id:currentUser.id,
+type,
+path,
+name:file.name
+});
+
+if(r.error)throw r.error;
+
+$(progressId).style.width="100%";
+
+setTimeout(()=>{
+$(progressId).style.width="0";
+},1200);
+}
+
+async function signedUrl(type,path){
+let b=type==="music"
+?"love-music"
+:type==="photo"
+?"love-photos"
+:"love-videos";
+
+let r=await sb.storage.from(b).createSignedUrl(path,3600);
+
+if(r.error)throw r.error;
+
+return r.data.signedUrl;
+}
+
+function downloadButton(url,name){
+let a=document.createElement("a");
+a.href=url;
+a.download=name||"love-space-file";
+a.target="_blank";
+a.rel="noopener";
+a.textContent="Download";
+a.className="muted small";
+a.style.display="block";
+a.style.marginTop="8px";
+return a;
+}
+
 async function loadMedia(){
- if(!currentUser||!coupleId)return;
+let r=await sb.from("love_media")
+.select("id,type,path,name,created_at")
+.eq("couple_id",coupleId)
+.order("created_at",{ascending:false})
+.limit(80);
 
- const {data,error}=await sb.from("love_media")
-  .select("id,type,path,name,created_at")
-  .eq("couple_id",coupleId)
-  .order("created_at",{ascending:false}).limit(100);
-
- if(error){
-  ["musicList","photoList","videoList"].forEach(id=>$(id).textContent="Media error: "+error.message);
-  return;
- }
-
- $("musicList").replaceChildren();
- $("photoList").replaceChildren();
- $("videoList").replaceChildren();
- mediaElements.clear();
-
- const counts={music:0,photo:0,video:0};
-
- for(const item of data||[]){
-  const bucket=item.type==="music"?"love-music":
-   item.type==="photo"?"love-photos":"love-videos";
-
-  const {data:urlData,error:urlError}=await sb.storage
-   .from(bucket).createSignedUrl(item.path,3600);
-
-  if(urlError)continue;
-
-  const card=document.createElement("div");
-  card.className="mediaItem";
-
-  const title=document.createElement("p");
-  title.textContent=item.name||"Shared memory";
-  card.appendChild(title);
-
-  if(item.type==="music"){
-   const audio=document.createElement("audio");
-   audio.controls=true;
-   audio.preload="metadata";
-   audio.src=urlData.signedUrl;
-   audio.dataset.mediaId=item.id;
-   card.appendChild(audio);
-   mediaElements.set(item.id,audio);
-   attachPlaybackSync(audio,item.id);
-   $("musicList").appendChild(card);
-   counts.music++;
-  }else if(item.type==="photo"){
-   const img=document.createElement("img");
-   img.src=urlData.signedUrl;
-   img.alt=item.name||"Shared photo";
-   img.style.cursor="zoom-in";
-   img.onclick=()=>openPhotoViewer(urlData.signedUrl);
-   card.appendChild(img);
-   $("photoList").appendChild(card);
-   counts.photo++;
-  }else if(item.type==="video"){
-   const video=document.createElement("video");
-   video.controls=true;
-   video.playsInline=true;
-   video.preload="metadata";
-   video.src=urlData.signedUrl;
-   video.dataset.mediaId=item.id;
-   card.appendChild(video);
-   mediaElements.set(item.id,video);
-   attachPlaybackSync(video,item.id);
-   $("videoList").appendChild(card);
-   counts.video++;
-  }
-
-  const actions=document.createElement("div");
-  actions.className="mediaActions";
-  const del=document.createElement("button");
-  del.className="btn secondary";
-  del.textContent="🗑 DELETE";
-  del.onclick=()=>deleteMedia(item);
-  actions.appendChild(del);
-  card.appendChild(actions);
- }
-
- if(!counts.music)$("musicList").innerHTML='<p class="empty">No songs shared yet.</p>';
- if(!counts.photo)$("photoList").innerHTML='<p class="empty">No photos shared yet.</p>';
- if(!counts.video)$("videoList").innerHTML='<p class="empty">No videos shared yet.</p>';
+if(r.error){
+say("mediaMsg",friendlyError(r.error));
+say("musicMsg",friendlyError(r.error));
+return;
 }
 
-/* DELETE MEDIA */
-async function deleteMedia(item){
- const confirmed=confirm("Delete "+(item.name||"this memory")+" permanently for both of you?");
- if(!confirmed)return;
+$("memories").innerHTML="";
+$("songs").innerHTML="";
 
- const bucket=item.type==="music"?"love-music":
-  item.type==="photo"?"love-photos":"love-videos";
+await Promise.all((r.data||[]).map(async item=>{
 
- try{
-  const {error:storageError}=await sb.storage.from(bucket).remove([item.path]);
-  if(storageError)throw storageError;
+try{
+let url=await signedUrl(item.type,item.path);
+let card=document.createElement("div");
+card.className="mediaItem";
 
-  const {error:rowError}=await sb.from("love_media")
-   .delete().eq("id",item.id).eq("couple_id",coupleId);
+let title=document.createElement("div");
+title.className="small";
+title.textContent=item.name||"Shared file";
+card.append(title);
 
-  if(rowError)throw rowError;
+if(item.type==="photo"){
+let img=document.createElement("img");
+img.loading="lazy";
+img.src=url;
+img.alt=item.name||"Shared photo";
 
-  say("settingsStatus","Memory deleted successfully.");
-  await loadMedia();
+card.append(img,downloadButton(url,item.name));
+$("memories").append(card);
 
-  if(spaceChannel)spaceChannel.send({
-   type:"broadcast",event:"media-deleted",
-   payload:{senderId:currentUser.id}
-  });
- }catch(e){
-  alert("Could not delete this memory: "+errorText(e));
- }
+}else if(item.type==="video"){
+let v=document.createElement("video");
+v.src=url;
+v.controls=true;
+v.preload="metadata";
+v.playsInline=true;
+
+card.append(v,downloadButton(url,item.name));
+$("memories").append(card);
+
+}else if(item.type==="music"){
+let a=document.createElement("audio");
+a.src=url;
+a.controls=true;
+a.preload="none";
+
+card.append(a,downloadButton(url,item.name));
+$("songs").append(card);
 }
 
-/* SYNCHRONIZED MUSIC AND VIDEO */
-function sendPlayback(mediaId,action,element){
- if(remotePlayback||!spaceChannel)return;
- const payload={
-  senderId:currentUser.id,mediaId,action,
-  currentTime:Number(element.currentTime||0),
-  paused:element.paused
- };
- spaceChannel.send({type:"broadcast",event:"playback",payload});
+}catch(e){
+console.warn("Media load failed",e);
 }
 
-function attachPlaybackSync(element,mediaId){
- element.addEventListener("play",()=>sendPlayback(mediaId,"play",element));
- element.addEventListener("pause",()=>sendPlayback(mediaId,"pause",element));
- element.addEventListener("seeked",()=>sendPlayback(mediaId,"seek",element));
- element.addEventListener("timeupdate",()=>{
-  const now=Date.now();
-  if(now-(lastSyncSent.get(mediaId)||0)>3000){
-   lastSyncSent.set(mediaId,now);
-   sendPlayback(mediaId,"time",element);
-  }
- });
+}));
 }
 
-async function receivePlayback(payload){
- if(!payload||payload.senderId===currentUser.id)return;
- const element=mediaElements.get(payload.mediaId);
- if(!element){
-  say("musicStatus","Your partner is playing shared media. Open the same song or video to sync.");
-  return;
- }
- remotePlayback=true;
- try{
-  const target=Number(payload.currentTime||0);
-  if(Number.isFinite(target)&&Math.abs(element.currentTime-target)>1.5){
-   try{element.currentTime=target}catch(e){}
-  }
-  if(payload.action==="play"){
-   try{await element.play()}
-   catch(e){say("musicStatus","Playback sync received. Tap Play on your phone to start.");}
-  }else if(payload.action==="pause"){
-   element.pause();
-  }
- }finally{
-  setTimeout(()=>{remotePlayback=false},500);
- }
+async function uploadMemory(){
+let f=$("photoVideoFile").files[0];
+let t=f&&fileKind(f);
+
+if(!f||!["photo","video"].includes(t)){
+return say("mediaMsg","Choose a photo or video.");
 }
 
-/* SPACE REALTIME CHANNEL */
-function subscribeSpace(){
- if(spaceChannel)sb.removeChannel(spaceChannel);
+say("mediaMsg","Uploading…");
+$("uploadMemory").disabled=true;
 
- spaceChannel=sb.channel("love-space-"+coupleId)
-  .on("broadcast",{event:"playback"},({payload})=>receivePlayback(payload))
-  .on("broadcast",{event:"wallpaper"},({payload})=>{
-   if(payload?.senderId!==currentUser.id&&payload?.value){
-    showWallpaper(payload.value);
-    say("settingsStatus","Your partner changed the shared wallpaper ❤️");
-   }
-  })
-  .on("broadcast",{event:"media-added"},({payload})=>{
-   if(payload?.senderId!==currentUser.id)loadMedia();
-  })
-  .on("broadcast",{event:"media-deleted"},({payload})=>{
-   if(payload?.senderId!==currentUser.id)loadMedia();
-  })
-  .on("broadcast",{event:"member-joined"},()=>checkPartner())
-  .subscribe(async status=>{
-   if(status==="SUBSCRIBED"){
-    await spaceChannel.send({type:"broadcast",event:"member-joined",payload:{senderId:currentUser.id}});
-   }
-   if(status==="CHANNEL_ERROR"){
-    say("partnerStatus","Realtime connection interrupted. Check your internet.");
-   }
-  });
+try{
+await uploadFile(f,t,"memoryProgress");
+$("photoVideoFile").value="";
+await loadMedia();
+say("mediaMsg","Memory added to your space.");
+
+}catch(e){
+say("mediaMsg",friendlyError(e));
+
+}finally{
+$("uploadMemory").disabled=false;
+}
 }
 
-/* PHOTO VIEWER */
-function openPhotoViewer(url){
- $("fullPhoto").src=url;
- $("photoViewer").classList.add("open");
- document.body.style.overflow="hidden";
+async function uploadMusic(){
+let f=$("musicFile").files[0];
+
+if(!f||fileKind(f)!=="music"){
+return say("musicMsg","Choose an audio file.");
 }
 
-function closePhotoViewer(){
- $("photoViewer").classList.remove("open");
- $("fullPhoto").src="";
- document.body.style.overflow="";
+say("musicMsg","Uploading song…");
+$("uploadMusic").disabled=true;
+
+try{
+await uploadFile(f,"music","musicProgress");
+$("musicFile").value="";
+await loadMedia();
+say("musicMsg","Song added to your library.");
+
+}catch(e){
+say("musicMsg",friendlyError(e));
+
+}finally{
+$("uploadMusic").disabled=false;
 }
-
-$("photoViewer").querySelector("img").addEventListener("click",e=>e.stopPropagation());
-
-document.addEventListener("keydown",e=>{
- if(e.key==="Escape")closePhotoViewer();
-});
-
-/* SHARED WALLPAPER */
-function applyWallpaper(value){
- const preview=$("wallpaperPreview");
- const chat=$("chatMessages");
-
- if(value.startsWith("photo:")){
-  const url=value.substring(6);
-  preview.style.backgroundImage=`url("${url}")`;
-  chat.style.backgroundImage=`url("${url}")`;
-  preview.style.backgroundColor="#270d20";
-  chat.style.backgroundColor="#270d20";
-  preview.style.backgroundSize="cover";
-  chat.style.backgroundSize="cover";
-  preview.style.backgroundPosition="center";
-  chat.style.backgroundPosition="center";
- }else{
-  preview.style.backgroundImage="none";
-  chat.style.backgroundImage="none";
-  preview.style.backgroundColor=value;
-  chat.style.backgroundColor=value;
-  $("wallpaperColor").value=value;
- }
-}
-
-async function showWallpaper(value){
- if(value.startsWith("photo:")){
-  const path=value.substring(6);
-  const {data,error}=await sb.storage.from("love-photos")
-   .createSignedUrl(path,3600);
-  if(error){
-   say("settingsStatus","Could not load wallpaper: "+error.message);
-   return;
-  }
-  applyWallpaper("photo:"+data.signedUrl);
- }else{
-  applyWallpaper(value);
- }
 }
 
 async function loadWallpaper(){
- const {data,error}=await sb.from("love_settings")
-  .select("wallpaper").eq("couple_id",coupleId).maybeSingle();
+let r=await sb.from("love_settings")
+.select("wallpaper")
+.eq("couple_id",coupleId)
+.maybeSingle();
 
- if(error){say("settingsStatus",errorText(error));return}
+if(r.error){
+say("settingsMsg",friendlyError(r.error));
+return;
+}
 
- const value=data?.wallpaper||"#270d20";
- await showWallpaper(value);
+let v=r.data?.wallpaper||"galaxy";
+$("wallpaper").value=v;
+applyWallpaper(v);
+}
+
+function applyWallpaper(v){
+let b={
+galaxy:"radial-gradient(circle at 15% 5%,#351326 0,transparent 34%),radial-gradient(circle at 90% 35%,#21143a 0,transparent 32%),#09070b",
+rose:"radial-gradient(circle at 20% 10%,#64233f 0,transparent 38%),radial-gradient(circle at 85% 35%,#35152d 0,transparent 38%),#100810",
+midnight:"radial-gradient(circle at 50% 0%,#182b4a 0,transparent 45%),#070a12",
+red:"radial-gradient(circle at 50% 0%,#631326 0,transparent 45%),#10070b"
+};
+
+document.body.style.background=b[v]||b.galaxy;
 }
 
 async function saveWallpaper(){
- const color=$("wallpaperColor").value;
- say("settingsStatus","Saving shared wallpaper...");
+let v=$("wallpaper").value;
+say("settingsMsg","Saving…");
 
- const {data:oldData}=await sb.from("love_settings")
-  .select("wallpaper").eq("couple_id",coupleId).maybeSingle();
+try{
+let r=await sb.from("love_settings")
+.update({
+wallpaper:v,
+updated_at:new Date().toISOString()
+})
+.eq("couple_id",coupleId);
 
- const oldWallpaper=oldData?.wallpaper||"";
+if(r.error)throw r.error;
 
- const {error}=await sb.from("love_settings").upsert({
-  couple_id:coupleId,wallpaper:color,
-  updated_at:new Date().toISOString()
- },{onConflict:"couple_id"});
+applyWallpaper(v);
+say("settingsMsg","Shared atmosphere updated.");
 
- if(error){say("settingsStatus",errorText(error));return}
-
- applyWallpaper(color);
-
- if(spaceChannel)await spaceChannel.send({
-  type:"broadcast",event:"wallpaper",
-  payload:{senderId:currentUser.id,value:color}
- });
-
- if(oldWallpaper.startsWith("photo:")){
-  const oldPath=oldWallpaper.substring(6);
-  await sb.storage.from("love-photos").remove([oldPath]);
- }
-
- say("settingsStatus","Your shared colour wallpaper has been updated ❤️");
+}catch(e){
+say("settingsMsg",friendlyError(e));
+}
 }
 
-async function uploadWallpaper(){
- const file=$("wallpaperFile").files[0];
-
- if(!file){say("settingsStatus","Choose a photo first.");return}
- if(!file.type.startsWith("image/")){
-  say("settingsStatus","Choose an image file.");return
- }
- if(file.size>100*1024*1024){
-  say("settingsStatus","The photo must be under 100 MB.");return
- }
-
- say("settingsStatus","Uploading wallpaper...");
-
- const path=coupleId+"/wallpaper-"+Date.now()+"-"+crypto.randomUUID();
-
- const {error:uploadError}=await sb.storage.from("love-photos")
-  .upload(path,file,{upsert:false,contentType:file.type});
-
- if(uploadError){
-  say("settingsStatus","Upload failed: "+uploadError.message);
-  return;
- }
-
- const {data:oldData}=await sb.from("love_settings")
-  .select("wallpaper").eq("couple_id",coupleId).maybeSingle();
-
- const oldWallpaper=oldData?.wallpaper||"";
-
- const value="photo:"+path;
-
- const {error}=await sb.from("love_settings").upsert({
-  couple_id:coupleId,wallpaper:value,
-  updated_at:new Date().toISOString()
- },{onConflict:"couple_id"});
-
- if(error){
-  await sb.storage.from("love-photos").remove([path]);
-  say("settingsStatus",errorText(error));
-  return;
- }
-
- await showWallpaper(value);
- $("wallpaperFile").value="";
-
- if(spaceChannel)await spaceChannel.send({
-  type:"broadcast",event:"wallpaper",
-  payload:{senderId:currentUser.id,value}
- });
-
- if(oldWallpaper.startsWith("photo:")){
-  const oldPath=oldWallpaper.substring(6);
-  await sb.storage.from("love-photos").remove([oldPath]);
- }
-
- say("settingsStatus","Your photo wallpaper is now shared ❤️");
-}
-
-async function removePhotoWallpaper(){
- await saveWallpaper();
-}
-
-/* SIGN OUT */
 async function logout(){
- if(!sb)return;
- if(chatChannel)await sb.removeChannel(chatChannel);
- if(spaceChannel)await sb.removeChannel(spaceChannel);
- await sb.auth.signOut();
- currentUser=null;coupleId=null;inviteCode=null;
- location.reload();
+try{
+await sb.auth.signOut();
+}catch(e){
+console.warn(e);
 }
 
-/* STARS */
-function createStars(){
- const container=$("stars");
- for(let i=0;i<100;i++){
-  const star=document.createElement("div");
-  star.className="star";
-  star.style.left=Math.random()*100+"%";
-  star.style.top=Math.random()*100+"%";
-  star.style.animationDelay=Math.random()*4+"s";
-  container.appendChild(star);
- }
+currentUser=null;
+coupleId=null;
+inviteCode=null;
+messagesById.clear();
+
+if(messageSubscription){
+await sb.removeChannel(messageSubscription);
+messageSubscription=null;
 }
 
-/* PWA INSTALL */
-window.addEventListener("beforeinstallprompt",event=>{
- event.preventDefault();
- installPrompt=event;
- $("installBtn").classList.remove("hidden");
+setView("auth");
+}
+
+function switchTab(id){
+["homePanel","chatPanel","mediaPanel","musicPanel","settingsPanel"]
+.forEach(x=>show(x,x===id));
+
+document.querySelectorAll("[data-tab]").forEach(b=>{
+b.classList.toggle("secondary",b.dataset.tab!==id);
 });
 
-async function installApp(){
- if(!installPrompt){
-  say("installStatus","Open the browser menu and choose Add to Home screen if available.");
-  return;
- }
- installPrompt.prompt();
- await installPrompt.userChoice;
- installPrompt=null;
- $("installBtn").classList.add("hidden");
+if(id==="chatPanel"){
+loadMessages();
+}
 }
 
-window.addEventListener("appinstalled",()=>{
- say("installStatus","Love Space has been installed ❤️");
+function updateNetwork(){
+let online=navigator.onLine;
+
+$("netState").textContent=online?"● Online":"● Offline";
+$("netState").className=online?"pill online":"pill offline";
+
+if(online){
+flushQueue();
+}
+}
+
+async function init(){
+
+if(!window.supabase){
+setView("auth");
+say("authMsg","Supabase library did not load. Check your internet connection and reload.");
+return;
+}
+
+sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+
+$("loginBtn").onclick=()=>authAction("login");
+$("signupBtn").onclick=()=>authAction("signup");
+$("createBtn").onclick=createSpace;
+$("joinBtn").onclick=joinSpace;
+$("sendBtn").onclick=sendMessage;
+
+$("messageInput").addEventListener("keydown",e=>{
+if(e.key==="Enter"&&!e.shiftKey){
+e.preventDefault();
+sendMessage();
+}
 });
 
-/* RESTORE LOGIN */
-async function restoreSession(){
- if(!initSupabase())return;
- const {data,error}=await sb.auth.getSession();
- if(error){say("authMessage",errorText(error));return}
- if(data.session){
-  currentUser=data.session.user;
-  try{await continueLogin()}
-  catch(e){showScreen("auth");say("authMessage",errorText(e))}
- }else{showScreen("auth")}
- sb.auth.onAuthStateChange((event,session)=>{
-  if(event==="SIGNED_OUT"){
-   currentUser=null;coupleId=null;showScreen("auth");
-  }
- });
+$("uploadMemory").onclick=uploadMemory;
+$("uploadMusic").onclick=uploadMusic;
+$("saveWallpaper").onclick=saveWallpaper;
+$("wallpaper").onchange=e=>applyWallpaper(e.target.value);
+$("refreshBtn").onclick=loadMessages;
+
+$("copyCode").onclick=async()=>{
+try{
+await navigator.clipboard.writeText(inviteCode||"");
+$("copyCode").textContent="Copied!";
+setTimeout(()=>$("copyCode").textContent="Copy code",1500);
+}catch(_){
+say("settingsMsg","Select and copy the invitation code.");
+}
+};
+
+$("logoutBtn").onclick=logout;
+$("logoutSetup").onclick=logout;
+
+document.querySelectorAll("[data-tab]").forEach(b=>{
+b.onclick=()=>switchTab(b.dataset.tab);
+});
+
+document.querySelectorAll("[data-go]").forEach(b=>{
+b.onclick=()=>switchTab(b.dataset.go);
+});
+
+window.addEventListener("online",updateNetwork);
+window.addEventListener("offline",updateNetwork);
+
+let r=await sb.auth.getSession();
+
+if(r.error){
+setView("auth");
+say("authMsg",friendlyError(r.error));
+return;
 }
 
-/* START */
-createStars();
-restoreSession();
+if(r.data.session){
+currentUser=r.data.session.user;
+await continueAfterLogin();
+}else{
+setView("auth");
+}
+
+sb.auth.onAuthStateChange((event,session)=>{
+
+if(event==="SIGNED_OUT"){
+currentUser=null;
+coupleId=null;
+setView("auth");
+
+}else if(session&&!currentUser){
+currentUser=session.user;
+setTimeout(()=>continueAfterLogin(),0);
+}
+
+});
 
 if("serviceWorker" in navigator){
- window.addEventListener("load",()=>{
-  navigator.serviceWorker.register("./sw.js").catch(()=>{});
- });
+navigator.serviceWorker.register("./sw.js")
+.catch(e=>console.warn("Service worker registration failed",e));
 }
+
+updateNetwork();
+}
+
+init();
 </script>
 </body>
-</html>
+ </html>
