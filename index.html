@@ -1,4 +1,3 @@
-
 <!doctype html>
 <html lang="en">
 <head>
@@ -169,6 +168,8 @@ let currentNickname=localStorage.getItem(nicknameKey)||"";
 let messagesById=new Map(),renderedMessages=new Map(),hasLoadedMessages=false;
 let boardMode="draw",boardActive=null,boardStrokes=[];
 let installPromptEvent=null;
+let updateRegistration=null;
+let updateReloading=false;
 
 function setView(v){
  show("authView",v==="auth");
@@ -183,6 +184,51 @@ function friendlyError(e){
  if(m.includes("already belongs"))return"This account is already connected to a Love Space.";
  if(m.includes("full")||m.includes("two members"))return"This Love Space already has two members.";
  return m;
+}
+
+/* AUTOMATIC APP UPDATES */
+async function checkForAppUpdate(){
+ if(!("serviceWorker" in navigator))return;
+
+ try{
+  if(!updateRegistration){
+   updateRegistration=await navigator.serviceWorker.register("./sw.js",{
+    updateViaCache:"none"
+   });
+  }
+
+  await updateRegistration.update();
+ }catch(e){
+  console.warn("Love Space update check failed:",e);
+ }
+}
+
+function setupAutoUpdates(){
+ if(!("serviceWorker" in navigator))return;
+
+ navigator.serviceWorker.addEventListener("controllerchange",()=>{
+  if(updateReloading)return;
+  updateReloading=true;
+  window.location.reload();
+ });
+
+ window.addEventListener("pageshow",()=>{
+  checkForAppUpdate();
+ });
+
+ document.addEventListener("visibilitychange",()=>{
+  if(document.visibilityState==="visible"){
+   checkForAppUpdate();
+  }
+ });
+
+ checkForAppUpdate();
+
+ setInterval(()=>{
+  if(document.visibilityState==="visible"){
+   checkForAppUpdate();
+  }
+ },30*60*1000);
 }
 
 async function authAction(kind){
@@ -1440,12 +1486,7 @@ function updateNetwork(){
 
 async function init(){
  setupInstall();
-
- if("serviceWorker"in navigator){
-  navigator.serviceWorker.register("./sw.js",{updateViaCache:"none"})
-   .then(reg=>reg.update())
-   .catch(e=>console.warn("Service worker registration failed",e));
- }
+ setupAutoUpdates();
 
  if(!window.supabase){
   setView("auth");
