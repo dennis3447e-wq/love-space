@@ -1,9 +1,10 @@
+
 {
   "id": "./",
   "name": "Love Space",
   "short_name": "Love Space",
   "description": "A private galaxy for two.",
-  "start_url": "./?refresh=final1",
+  "start_url": "./",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait",
@@ -14,7 +15,7 @@
       "src": "./icon.svg",
       "sizes": "any",
       "type": "image/svg+xml",
-      "purpose": "any maskable"
+      "purpose": "any"
     }
   ]
 }
