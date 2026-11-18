@@ -1,5 +1,5 @@
 
-const CACHE_NAME = "love-space-shell-v7";
+const CACHE_NAME = "love-space-shell-v8";
 
 const APP_FILES = [
   "./",
@@ -10,9 +10,16 @@ const APP_FILES = [
 
 self.addEventListener("install", event => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then(cache => cache.addAll(APP_FILES))
+    (async () => {
+      const cache = await caches.open(CACHE_NAME);
+
+      await Promise.allSettled(
+        APP_FILES.map(file => cache.add(file))
+      );
+
+      await self.skipWaiting();
+    })()
   );
-  self.skipWaiting();
 });
 
 self.addEventListener("activate", event => {
@@ -22,7 +29,10 @@ self.addEventListener("activate", event => {
 
       await Promise.all(
         keys
-          .filter(key => key.startsWith("love-space-shell-") && key !== CACHE_NAME)
+          .filter(key =>
+            key.startsWith("love-space-shell-") &&
+            key !== CACHE_NAME
+          )
           .map(key => caches.delete(key))
       );
 
@@ -32,29 +42,39 @@ self.addEventListener("activate", event => {
 });
 
 self.addEventListener("fetch", event => {
-  if (event.request.method !== "GET") return;
+  const request = event.request;
 
-  const url = new URL(event.request.url);
+  if (request.method !== "GET") return;
+
+  const url = new URL(request.url);
 
   if (url.origin !== self.location.origin) return;
 
   event.respondWith(
-    fetch(event.request)
-      .then(response => {
-        if (response && response.ok) {
-          const copy = response.clone();
+    (async () => {
+      try {
+        const response = await fetch(request);
 
-          caches.open(CACHE_NAME).then(cache => {
-            cache.put(event.request, copy);
-          });
+        if (response && response.ok) {
+          const cache = await caches.open(CACHE_NAME);
+          cache.put(request, response.clone()).catch(() => {});
         }
 
         return response;
-      })
-      .catch(async () => {
-        const cached = await caches.match(event.request);
-        return cached || caches.match("./index.html");
-      })
+      } catch (error) {
+        const cached = await caches.match(request);
+
+        if (cached) return cached;
+
+        if (request.mode === "navigate") {
+          return (
+            await caches.match("./index.html")
+          ) || Response.error();
+        }
+
+        return Response.error();
+      }
+    })()
   );
 });
 
@@ -67,27 +87,30 @@ self.addEventListener("push", event => {
         payload = event.data ? event.data.json() : {};
       } catch {
         payload = {
-          body: event.data ? event.data.text() : "You have a new message."
+          body: event.data
+            ? event.data.text()
+            : "You have a new message."
         };
       }
 
       const title = payload.title || "Love Space ❤️";
 
-      const options = {
+      await self.registration.showNotification(title, {
         body: payload.body || "You have a new message.",
         icon: "./icon.svg",
         badge: "./icon.svg",
-        tag: payload.notificationId
-          ? "love-space-" + payload.notificationId
-          : "love-space-message",
+        tag: payload.tag || (
+          payload.notificationId
+            ? "love-space-" + payload.notificationId
+            : "love-space-message"
+        ),
         renotify: true,
         vibrate: [200, 100, 200],
         data: {
+          url: payload.url || "./",
           notificationId: payload.notificationId || null
         }
-      };
-
-      await self.registration.showNotification(title, options);
+      });
     })()
   );
 });
@@ -97,7 +120,24 @@ self.addEventListener("notificationclick", event => {
 
   event.waitUntil(
     (async () => {
-      const target = new URL("./?open=chat", self.registration.scope);
+      const scope = self.registration.scope;
+
+      let target = new URL(
+        event.notification.data?.url || "?open=chat",
+        scope
+      );
+
+      if (
+        target.origin !== self.location.origin ||
+        !target.href.startsWith(scope)
+      ) {
+        target = new URL("?open=chat", scope);
+      }
+
+      if (target.pathname === new URL(scope).pathname &&
+          !target.searchParams.has("open")) {
+        target.searchParams.set("open", "chat");
+      }
 
       const windows = await self.clients.matchAll({
         type: "window",
@@ -105,7 +145,7 @@ self.addEventListener("notificationclick", event => {
       });
 
       for (const client of windows) {
-        if (client.url.startsWith(self.registration.scope)) {
+        if (client.url.startsWith(scope)) {
           await client.focus();
 
           if ("navigate" in client) {
