@@ -1,3 +1,4 @@
+
 <!doctype html>
 <html lang="en">
 <head>
@@ -30,86 +31,1517 @@ button,input,textarea,select{font:inherit}button{border:0;border-radius:13px;pad
 <body>
 <div class="wrap">
 <header class="brand"><div class="planet">🪐</div><h1>LOVE SPACE</h1><p>One little universe. Just the two of you.</p><button id="installAppBtn" class="secondary" type="button">Install Love Space</button><p id="installHelp" class="muted small">Install this app on your phone for a full-screen experience.</p></header>
-<section id="authView" class="card hidden"><h2>Enter your universe</h2><input id="email" class="field" type="email" autocomplete="email" placeholder="Email address"><input id="password" class="field" type="password" autocomplete="current-password" placeholder="Password (at least 8 characters)"><div class="row"><button id="loginBtn">Log in</button><button id="signupBtn" class="secondary">Create account</button></div><p id="authMsg" class="status"></p><p class="muted small">Create an account on your phone, then Eddi creates her own account on hers.</p></section>
-<section id="setupView" class="card hidden"><h2>Make it ours 🪐</h2><input id="nickname" class="field" maxlength="25" placeholder="Your name or nickname"><button id="createBtn" style="width:100%">Create our space</button><p class="muted" style="text-align:center">— OR JOIN YOUR PARTNER'S SPACE —</p><input id="inviteInput" class="field" maxlength="20" placeholder="Invitation code"><button id="joinBtn" class="secondary" style="width:100%">Join with code</button><p id="setupMsg" class="status"></p><button id="logoutSetup" class="secondary">Log out</button></section>
+
+<section id="authView" class="card hidden">
+<h2>Enter your universe</h2>
+<input id="email" class="field" type="email" autocomplete="email" placeholder="Email address">
+<input id="password" class="field" type="password" autocomplete="current-password" placeholder="Password (at least 8 characters)">
+<div class="row"><button id="loginBtn">Log in</button><button id="signupBtn" class="secondary">Create account</button></div>
+<p id="authMsg" class="status"></p>
+<p class="muted small">Create an account on your phone, then Eddi creates her own account on hers.</p>
+</section>
+
+<section id="setupView" class="card hidden">
+<h2>Make it ours 🪐</h2>
+<input id="nickname" class="field" maxlength="25" placeholder="Your name or nickname">
+<button id="createBtn" style="width:100%">Create our space</button>
+<p class="muted" style="text-align:center">— OR JOIN YOUR PARTNER'S SPACE —</p>
+<input id="inviteInput" class="field" maxlength="20" placeholder="Invitation code">
+<button id="joinBtn" class="secondary" style="width:100%">Join with code</button>
+<p id="setupMsg" class="status"></p>
+<button id="logoutSetup" class="secondary">Log out</button>
+</section>
+
 <main id="appView" class="hidden">
-<section class="card"><div class="topline"><div><div class="muted small">YOUR PRIVATE UNIVERSE</div><h2 id="spaceTitle">Our Universe</h2></div><div><span id="netState" class="pill">Checking connection…</span> <button id="logoutBtn" class="secondary">Log out</button></div></div><div class="muted small">Your private invitation code</div><div class="row" style="align-items:center"><div id="inviteCode" class="code">------</div><button id="copyCode" class="secondary">Copy code</button></div><p class="muted small">Share this code privately. Your space is limited to two accounts.</p></section>
-<nav class="tabs"><button data-tab="homePanel">Home ✨</button><button data-tab="chatPanel" class="secondary">Chat 💬</button><button data-tab="mediaPanel" class="secondary">Memories 📸</button><button data-tab="musicPanel" class="secondary">Music 🎵</button><button data-tab="boardPanel" class="secondary">Whiteboard ✍️</button><button data-tab="reelsPanel" class="secondary">Reels 🎬</button><button data-tab="settingsPanel" class="secondary">Space ⚙️</button></nav>
-<section id="homePanel" class="card"><h2>Welcome back to your universe 💗</h2><p class="muted">A little space that belongs to both of you.</p><div class="row"><button data-go="chatPanel">Open our chat</button><button class="secondary" data-go="mediaPanel">View memories</button></div><p class="muted small">Messages sync when you're online. Messages you send offline are queued on this phone and sent when connection returns.</p></section>
-<section id="chatPanel" class="card hidden"><div class="sectionTitle"><h2>Just us 💗</h2><span class="pill" id="chatStatus">Private chat</span></div><div id="messages" class="messages" aria-live="polite"></div><textarea id="messageInput" class="field" rows="2" placeholder="Send a message…"></textarea><div class="row"><button id="sendBtn">Send message</button><button id="refreshBtn" class="secondary">Refresh</button></div><p id="chatMsg" class="status"></p><p class="muted small">✓ Sent · <span style="color:var(--green)">✓✓</span> Read by your partner</p></section>
-<section id="mediaPanel" class="card hidden"><h2>Our memories 📸</h2><p class="muted small">Share photos and videos with each other.</p><input id="photoVideoFile" class="field" type="file" accept="image/*,video/*"><button id="uploadMemory" style="width:100%">Upload memory</button><div class="progress"><span id="memoryProgress"></span></div><p id="mediaMsg" class="status"></p><div id="memories" class="mediaGrid"></div></section>
-<section id="musicPanel" class="card hidden"><h2>Our soundtrack 🎧</h2><p class="muted small">Songs in your shared library. Playback is controlled separately on each phone.</p><input id="musicFile" class="field" type="file" accept="audio/*"><button id="uploadMusic" style="width:100%">Add song to our library</button><div class="progress"><span id="musicProgress"></span></div><p id="musicMsg" class="status"></p><div id="songs" class="mediaGrid"></div></section>
-<section id="boardPanel" class="card hidden"><h2>Our whiteboard 🤍</h2><p class="muted small">Draw or write together. Changes appear on both phones.</p><div class="board-tools"><label class="small">Colour <input id="boardColor" type="color" value="#e52d58"></label><label class="small">Brush <input id="boardSize" type="range" min="2" max="22" value="5"></label><button id="boardTextMode" class="secondary" type="button">Text mode</button><button id="boardDrawMode" class="secondary" type="button">Draw mode</button><button id="boardClear" class="secondary" type="button">Clear board</button></div><input id="boardText" class="field" maxlength="180" placeholder="Write a note for each other…"><div class="board-wrap"><canvas id="whiteboard" width="900" height="540"></canvas></div><p id="boardMsg" class="status"></p></section>
-<section id="reelsPanel" class="card hidden"><h2>Our Reels 🎬</h2><p class="muted small">Save Instagram Reels here and share them into your chat.</p><input id="reelUrl" class="field" type="url" placeholder="Paste an Instagram Reel link"><input id="reelCaption" class="field" maxlength="180" placeholder="Add a little caption (optional)"><button id="addReel" style="width:100%">Add Reel</button><p id="reelMsg" class="status"></p><div id="reelsList"></div></section>
-<section id="settingsPanel" class="card hidden"><h2>Make it feel like us ✨</h2><h3>Notifications ❤️</h3><p class="muted small">Get a phone alert when your partner sends you a message.</p><button id="enablePushBtn" style="width:100%">Enable notifications</button><p id="pushMsg" class="status"></p><label class="muted" for="wallpaper">Shared atmosphere</label><select id="wallpaper" class="field"><option value="galaxy">Deep galaxy</option><option value="rose">Rose nebula</option><option value="midnight">Midnight</option><option value="red">Crimson orbit</option></select><label class="muted" for="wallpaperMode">Photo wallpaper placement</label><select id="wallpaperMode" class="field"><option value="chat">Chat background only</option><option value="app">Whole app background</option></select><label class="muted" for="wallpaperPhoto">Choose a photo from your phone</label><input id="wallpaperPhoto" class="field" type="file" accept="image/*"><label class="muted" for="sharedWallpaper">Or choose a photo already in Memories</label><select id="sharedWallpaper" class="field"><option value="">Choose a shared photo…</option></select><div class="row"><button id="savePhotoWallpaper" class="secondary">Use selected photo</button><button id="clearPhotoWallpaper" class="secondary">Remove photo</button></div><button id="saveWallpaper" style="width:100%;margin-top:9px">Save preset atmosphere</button><p id="settingsMsg" class="status"></p><p class="muted small">Photo wallpapers sync to both phones. Each phone keeps an offline copy after it has loaded the photo once.</p></section>
-</main><div class="footer">LOVE SPACE · MADE FOR TWO</div></div>
+<section class="card">
+<div class="topline"><div><div class="muted small">YOUR PRIVATE UNIVERSE</div><h2 id="spaceTitle">Our Universe</h2></div><div><span id="netState" class="pill">Checking connection…</span> <button id="logoutBtn" class="secondary">Log out</button></div></div>
+<div class="muted small">Your private invitation code</div>
+<div class="row" style="align-items:center"><div id="inviteCode" class="code">------</div><button id="copyCode" class="secondary">Copy code</button></div>
+<p class="muted small">Share this code privately. Your space is limited to two accounts.</p>
+</section>
+
+<nav class="tabs">
+<button data-tab="homePanel">Home ✨</button>
+<button data-tab="chatPanel" class="secondary">Chat 💬</button>
+<button data-tab="mediaPanel" class="secondary">Memories 📸</button>
+<button data-tab="musicPanel" class="secondary">Music 🎵</button>
+<button data-tab="boardPanel" class="secondary">Whiteboard ✍️</button>
+<button data-tab="reelsPanel" class="secondary">Reels 🎬</button>
+<button data-tab="settingsPanel" class="secondary">Space ⚙️</button>
+</nav>
+
+<section id="homePanel" class="card">
+<h2>Welcome back to your universe 💗</h2>
+<p class="muted">A little space that belongs to both of you.</p>
+<div class="row"><button data-go="chatPanel">Open our chat</button><button class="secondary" data-go="mediaPanel">View memories</button></div>
+<p class="muted small">Messages sync when you're online. Messages you send offline are queued on this phone and sent when connection returns.</p>
+</section>
+
+<section id="chatPanel" class="card hidden">
+<div class="sectionTitle"><h2>Just us 💗</h2><span class="pill" id="chatStatus">Private chat</span></div>
+<div id="messages" class="messages" aria-live="polite"></div>
+<textarea id="messageInput" class="field" rows="2" placeholder="Send a message…"></textarea>
+<div class="row"><button id="sendBtn">Send message</button><button id="refreshBtn" class="secondary">Refresh</button></div>
+<p id="chatMsg" class="status"></p>
+<p class="muted small">✓ Sent · <span style="color:var(--green)">✓✓</span> Read by your partner</p>
+</section>
+
+<section id="mediaPanel" class="card hidden">
+<h2>Our memories 📸</h2><p class="muted small">Share photos and videos with each other.</p>
+<input id="photoVideoFile" class="field" type="file" accept="image/*,video/*">
+<button id="uploadMemory" style="width:100%">Upload memory</button>
+<div class="progress"><span id="memoryProgress"></span></div>
+<p id="mediaMsg" class="status"></p><div id="memories" class="mediaGrid"></div>
+</section>
+
+<section id="musicPanel" class="card hidden">
+<h2>Our soundtrack 🎧</h2><p class="muted small">Songs in your shared library. Playback is controlled separately on each phone.</p>
+<input id="musicFile" class="field" type="file" accept="audio/*">
+<button id="uploadMusic" style="width:100%">Add song to our library</button>
+<div class="progress"><span id="musicProgress"></span></div>
+<p id="musicMsg" class="status"></p><div id="songs" class="mediaGrid"></div>
+</section>
+
+<section id="boardPanel" class="card hidden">
+<h2>Our whiteboard 🤍</h2><p class="muted small">Draw or write together. Changes appear on both phones.</p>
+<div class="board-tools">
+<label class="small">Colour <input id="boardColor" type="color" value="#e52d58"></label>
+<label class="small">Brush <input id="boardSize" type="range" min="2" max="22" value="5"></label>
+<button id="boardTextMode" class="secondary" type="button">Text mode</button>
+<button id="boardDrawMode" class="secondary" type="button">Draw mode</button>
+<button id="boardClear" class="secondary" type="button">Clear board</button>
+</div>
+<input id="boardText" class="field" maxlength="180" placeholder="Write a note for each other…">
+<div class="board-wrap"><canvas id="whiteboard" width="900" height="540"></canvas></div>
+<p id="boardMsg" class="status"></p>
+</section>
+
+<section id="reelsPanel" class="card hidden">
+<h2>Our Reels 🎬</h2><p class="muted small">Save Instagram Reels here and share them into your chat.</p>
+<input id="reelUrl" class="field" type="url" placeholder="Paste an Instagram Reel link">
+<input id="reelCaption" class="field" maxlength="180" placeholder="Add a little caption (optional)">
+<button id="addReel" style="width:100%">Add Reel</button>
+<p id="reelMsg" class="status"></p><div id="reelsList"></div>
+</section>
+
+<section id="settingsPanel" class="card hidden">
+<h2>Make it feel like us ✨</h2>
+<h3>Notifications ❤️</h3>
+<p class="muted small">Get a phone alert when your partner sends you a message.</p>
+<button id="enablePushBtn" style="width:100%">Enable notifications</button>
+<p id="pushMsg" class="status"></p>
+<label class="muted" for="wallpaper">Shared atmosphere</label>
+<select id="wallpaper" class="field">
+<option value="galaxy">Deep galaxy</option><option value="rose">Rose nebula</option><option value="midnight">Midnight</option><option value="red">Crimson orbit</option>
+</select>
+<label class="muted" for="wallpaperMode">Photo wallpaper placement</label>
+<select id="wallpaperMode" class="field"><option value="chat">Chat background only</option><option value="app">Whole app background</option></select>
+<label class="muted" for="wallpaperPhoto">Choose a photo from your phone</label>
+<input id="wallpaperPhoto" class="field" type="file" accept="image/*">
+<label class="muted" for="sharedWallpaper">Or choose a photo already in Memories</label>
+<select id="sharedWallpaper" class="field"><option value="">Choose a shared photo…</option></select>
+<div class="row"><button id="savePhotoWallpaper" class="secondary">Use selected photo</button><button id="clearPhotoWallpaper" class="secondary">Remove photo</button></div>
+<button id="saveWallpaper" style="width:100%;margin-top:9px">Save preset atmosphere</button>
+<p id="settingsMsg" class="status"></p>
+<p class="muted small">Photo wallpapers sync to both phones. Each phone keeps an offline copy after it has loaded the photo once.</p>
+</section>
+</main>
+<div class="footer">LOVE SPACE · MADE FOR TWO</div>
+</div>
+
 <script>
 "use strict";
+
 const SUPABASE_URL="https://oiwmbgszcesiflpjooap.supabase.co";
 const SUPABASE_KEY="sb_publishable_OiquM_qONAjwK5khLen1Tw_7GEvFe53";
-const $=id=>document.getElementById(id),show=(id,yes)=>$(id).classList.toggle("hidden",!yes),say=(id,msg)=>{$(id).textContent=msg||""};
-const nicknameKey="love_nickname",queueKey="love_space_pending_";
+const $=id=>document.getElementById(id);
+const show=(id,yes)=>$(id).classList.toggle("hidden",!yes);
+const say=(id,msg)=>{$(id).textContent=msg||""};
+
+const nicknameKey="love_nickname";
+const queueKey="love_space_pending_";
 const PUSH_PUBLIC_KEY="BGogUyIFVgMMUI340KngU7S3febgZNH6YKpc-Ne1F_B-_IpwSVcuG6e4MHUfSWqVM3eN4uLOWlQjscyok13nnTE";
-let sb,currentUser=null,coupleId=null,inviteCode=null,partnerUserId=null,messageSubscription=null,settingsSubscription=null,boardSubscription=null,reelSubscription=null,mediaSubscription=null,wallpaperObjectUrl=null,currentWallpaperPath=null,currentNickname=localStorage.getItem(nicknameKey)||"",messagesById=new Map(),renderedMessages=new Map(),hasLoadedMessages=false,boardMode="draw",boardActive=null,boardStrokes=[],installPromptEvent=null;
-function setView(v){show("authView",v==="auth");show("setupView",v==="setup");show("appView",v==="app")}
-function friendlyError(e){let m=e?.message||String(e||"Unknown error");if(m.includes("Invalid login credentials"))return"Email or password is incorrect.";if(m.includes("User already registered"))return"This email already has an account. Log in instead.";if(m.includes("already belongs"))return"This account is already connected to a Love Space.";if(m.includes("full")||m.includes("two members"))return"This Love Space already has two members.";return m}
-async function authAction(kind){let email=$("email").value.trim(),password=$("password").value;if(!email||password.length<8){say("authMsg","Enter your email and a password with at least 8 characters.");return}say("authMsg",kind==="signup"?"Creating account…":"Logging in…");try{let r=kind==="signup"?await sb.auth.signUp({email,password}):await sb.auth.signInWithPassword({email,password});if(r.error)throw r.error;if(kind==="signup"&&!r.data.session){say("authMsg","Account created. Check your email to confirm it, then log in.");return}currentUser=r.data.user;await continueAfterLogin()}catch(e){say("authMsg",friendlyError(e))}}
-async function continueAfterLogin(){let {data,error}=await sb.from("love_couple_members").select("couple_id").eq("user_id",currentUser.id).maybeSingle();if(error){setView("setup");say("setupMsg",friendlyError(error));return}if(data?.couple_id){coupleId=data.couple_id;await loadSpace()}else{$("nickname").value=currentNickname;setView("setup")}}
-async function createSpace(){let name=$("nickname").value.trim();if(!name)return say("setupMsg","Choose your name or nickname first.");currentNickname=name.slice(0,25);localStorage.setItem(nicknameKey,currentNickname);say("setupMsg","Creating your universe…");$("createBtn").disabled=true;try{let r=await sb.rpc("create_love_couple");if(r.error)throw r.error;let d=Array.isArray(r.data)?r.data[0]:r.data;if(!d?.couple_id||!d?.invite_code)throw Error("The database did not return the new space details.");coupleId=d.couple_id;inviteCode=d.invite_code;await loadSpace()}catch(e){say("setupMsg",friendlyError(e))}finally{$("createBtn").disabled=false}}
-async function joinSpace(){let name=$("nickname").value.trim(),code=$("inviteInput").value.trim();if(!name||!code)return say("setupMsg","Enter your nickname and invitation code.");currentNickname=name.slice(0,25);localStorage.setItem(nicknameKey,currentNickname);say("setupMsg","Joining your universe…");$("joinBtn").disabled=true;try{let r=await sb.rpc("join_love_couple",{p_invite_code:code});if(r.error)throw r.error;if(!r.data)throw Error("The database did not return a space ID.");coupleId=r.data;await loadSpace()}catch(e){say("setupMsg",friendlyError(e))}finally{$("joinBtn").disabled=false}}
-async function loadSpace(){if(!coupleId)throw Error("Missing Love Space ID.");let m=await sb.from("love_couple_members").select("user_id").eq("couple_id",coupleId);if(m.error)throw m.error;if(!m.data?.some(x=>x.user_id===currentUser.id))throw Error("This account is not a member of this Love Space.");partnerUserId=m.data.find(x=>x.user_id!==currentUser.id)?.user_id||null;let r=await sb.from("love_couples").select("name,invite_code").eq("id",coupleId).single();if(r.error)throw r.error;inviteCode=r.data.invite_code;$("spaceTitle").textContent=r.data.name||"Our Universe";$("inviteCode").textContent=inviteCode||"------";setView("app");hasLoadedMessages=false;messagesById.clear();renderedMessages.clear();await Promise.all([loadMessages(),loadMedia(),loadWallpaper(),loadBoard(),loadReels()]);subscribeToMessages();subscribeToSettings();subscribeToBoard();subscribeToReels();subscribeToMedia();await flushQueue();updateNetwork();if(new URLSearchParams(location.search).get("open")==="chat")switchTab("chatPanel")}
-function parseContent(raw){try{return JSON.parse(raw)}catch(_){return{nickname:"Partner",text:raw}}}
-async function loadMessages(){let r=await sb.from("love_messages").select("id,user_id,content,created_at,edited_at,deleted_at,deleted_by").eq("couple_id",coupleId).order("created_at",{ascending:false}).limit(150);if(r.error){say("chatMsg",friendlyError(r.error));return}messagesById.clear();(r.data||[]).reverse().forEach(x=>messagesById.set(x.id,x));await renderMessages();await markPartnerMessagesRead([...messagesById.values()])}
-async function renderMessages(){let box=$("messages"),rows=[...messagesById.values()].sort((a,b)=>new Date(a.created_at)-new Date(b.created_at)),near=box.scrollHeight-box.scrollTop-box.clientHeight<100,own=rows.filter(x=>x.user_id===currentUser.id&&!x.deleted_at).map(x=>x.id),read=new Set();if(partnerUserId&&own.length){let rr=await sb.from("love_message_receipts").select("message_id").eq("couple_id",coupleId).eq("reader_id",partnerUserId).in("message_id",own);if(!rr.error)(rr.data||[]).forEach(x=>read.add(x.message_id))}let keep=new Set();for(let row of rows){keep.add(row.id);let p=parseContent(row.content),mine=row.user_id===currentUser.id,isRead=read.has(row.id),sig=JSON.stringify([row.content,row.edited_at,row.deleted_at,row.created_at,isRead]);let div=renderedMessages.get(row.id);if(!div){div=document.createElement("div");renderedMessages.set(row.id,div);box.append(div)}if(div.dataset.sig===sig)continue;div.dataset.sig=sig;div.className="bubble"+(mine?" mine":"")+(row.deleted_at?" deleted":"");let head=document.createElement("small"),name=document.createElement("span");name.textContent=p.nickname||"Partner";head.append(name);if(row.edited_at&&!row.deleted_at){let ed=document.createElement("span");ed.textContent="edited";head.append(ed)}if(mine&&!row.deleted_at){let tick=document.createElement("span");tick.className="ticks"+(isRead?" read":"");tick.textContent=isRead?"✓✓":"✓";head.append(tick)}let body=document.createElement("div");body.className="body";body.textContent=row.deleted_at?"This message was deleted":p.text||"";let time=document.createElement("div");time.className="pill";time.style.marginTop="5px";time.textContent=row.created_at?new Date(row.created_at).toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"}):"";div.replaceChildren(head,body,time);if(mine&&!row.deleted_at){let tools=document.createElement("div");tools.className="tools";let edit=document.createElement("button");edit.className="ghost";edit.textContent="Edit";edit.onclick=()=>editMessage(row);let del=document.createElement("button");del.className="ghost";del.textContent="Delete";del.onclick=()=>deleteMessage(row);tools.append(edit,del);div.append(tools)}}for(let [id,node] of renderedMessages){if(!keep.has(id)){node.remove();renderedMessages.delete(id)}}if(!hasLoadedMessages||near)box.scrollTop=box.scrollHeight;hasLoadedMessages=true}
-async function editMessage(row){let p=parseContent(row.content),next=prompt("Edit your message",p.text||"");if(next===null)return;next=next.trim();if(!next)return alert("A message cannot be empty.");let content=JSON.stringify({...p,text:next}),r=await sb.from("love_messages").update({content,edited_at:new Date().toISOString()}).eq("id",row.id).eq("user_id",currentUser.id);if(r.error)return say("chatMsg",friendlyError(r.error));row.content=content;row.edited_at=new Date().toISOString();messagesById.set(row.id,row);await renderMessages();say("chatMsg","Message updated.")}
-async function deleteMessage(row){if(!confirm("Delete this message for both of you?"))return;let r=await sb.from("love_messages").update({deleted_at:new Date().toISOString(),deleted_by:currentUser.id}).eq("id",row.id).eq("user_id",currentUser.id);if(r.error)return say("chatMsg",friendlyError(r.error));row.deleted_at=new Date().toISOString();row.deleted_by=currentUser.id;messagesById.set(row.id,row);await renderMessages();say("chatMsg","Message deleted for both of you.")}
-function subscribeToMessages(){if(messageSubscription)sb.removeChannel(messageSubscription);messageSubscription=sb.channel("love-messages-"+coupleId).on("postgres_changes",{event:"*",schema:"public",table:"love_messages",filter:"couple_id=eq."+coupleId},async p=>{if(p.eventType==="DELETE")messagesById.delete(p.old.id);else messagesById.set(p.new.id,p.new);await renderMessages();if(p.new?.user_id!==currentUser.id)markPartnerMessagesRead([p.new])}).on("postgres_changes",{event:"*",schema:"public",table:"love_message_receipts",filter:"couple_id=eq."+coupleId},()=>renderMessages()).subscribe()}
-async function markPartnerMessagesRead(rows){let unseen=rows.filter(x=>x.user_id!==currentUser.id&&!x.deleted_at);if(!unseen.length||!navigator.onLine)return;let data=unseen.map(x=>({message_id:x.id,couple_id:coupleId,reader_id:currentUser.id})),r=await sb.from("love_message_receipts").upsert(data,{onConflict:"message_id,reader_id",ignoreDuplicates:true});if(r.error)console.warn("Read receipt:",r.error.message)}
-function pending(){try{return JSON.parse(localStorage.getItem(queueKey+coupleId)||"[]")}catch(_){return[]}}
-function savePending(q){localStorage.setItem(queueKey+coupleId,JSON.stringify(q))}
-async function sendMessage(){let text=$("messageInput").value.trim();if(!text)return;let content=JSON.stringify({nickname:currentNickname||"Partner",text});if(!navigator.onLine){let q=pending();q.push({content,created_at:new Date().toISOString()});savePending(q);$("messageInput").value="";say("chatMsg","Saved on this phone. It will send when you're online.");return}$("sendBtn").disabled=true;try{let r=await sb.from("love_messages").insert({couple_id:coupleId,user_id:currentUser.id,content}).select().single();if(r.error)throw r.error;messagesById.set(r.data.id,r.data);await renderMessages();$("messages").scrollTop=$("messages").scrollHeight;$("messageInput").value="";say("chatMsg","");notifyPartner(text)}catch(e){if(!navigator.onLine){let q=pending();q.push({content,created_at:new Date().toISOString()});savePending(q);$("messageInput").value="";say("chatMsg","Connection lost. Message saved to send later.")}else say("chatMsg",friendlyError(e))}finally{$("sendBtn").disabled=false}}
-async function flushQueue(){if(!navigator.onLine||!coupleId)return;let q=pending();if(!q.length)return;let left=[];for(let i=0;i<q.length;i++){let item=q[i],r=await sb.from("love_messages").insert({couple_id:coupleId,user_id:currentUser.id,content:item.content}).select().single();if(r.error){left=q.slice(i);break}notifyPartner(parseContent(item.content).text||"You have a new message")}savePending(left);if(!left.length){say("chatMsg","Your offline messages have been sent.");await loadMessages()}}
-function fileKind(f){if(f.type.startsWith("image/"))return"photo";if(f.type.startsWith("video/"))return"video";if(f.type.startsWith("audio/"))return"music";return null}
-async function uploadFile(file,type,progressId){if(!file)throw Error("Choose a file first.");if(file.size>100*1024*1024)throw Error("Choose a file smaller than 100 MB.");let ext=(file.name.split(".").pop()||"file").replace(/[^a-zA-Z0-9]/g,"").slice(0,10),path=coupleId+"/"+Date.now()+"-"+crypto.randomUUID()+"."+ext,bucket=type==="music"?"love-music":type==="photo"?"love-photos":"love-videos";$(progressId).style.width="15%";let u=await sb.storage.from(bucket).upload(path,file,{upsert:false,contentType:file.type||"application/octet-stream"});if(u.error)throw u.error;$(progressId).style.width="75%";let r=await sb.from("love_media").insert({couple_id:coupleId,user_id:currentUser.id,type,path,name:file.name});if(r.error)throw r.error;$(progressId).style.width="100%";setTimeout(()=>$(progressId).style.width="0",1200)}
-async function signedUrl(type,path){let b=type==="music"?"love-music":type==="photo"?"love-photos":"love-videos",r=await sb.storage.from(b).createSignedUrl(path,3600);if(r.error)throw r.error;return r.data.signedUrl}
-function downloadButton(url,name){let a=document.createElement("a");a.href=url;a.download=name||"love-space-file";a.target="_blank";a.rel="noopener";a.textContent="Download";a.className="muted small";a.style.display="block";a.style.marginTop="8px";return a}
-async function loadMedia(){let r=await sb.from("love_media").select("id,type,path,name,created_at").eq("couple_id",coupleId).order("created_at",{ascending:false}).limit(80);if(r.error){say("mediaMsg",friendlyError(r.error));say("musicMsg",friendlyError(r.error));return}$("memories").replaceChildren();$("songs").replaceChildren();await Promise.all((r.data||[]).map(async item=>{try{let url=await signedUrl(item.type,item.path),card=document.createElement("div");card.className="mediaItem";let title=document.createElement("div");title.className="small";title.textContent=item.name||"Shared file";card.append(title);if(item.type==="photo"){let img=document.createElement("img");img.loading="lazy";img.src=url;img.alt=item.name||"Shared photo";card.append(img,downloadButton(url,item.name));$("memories").append(card)}else if(item.type==="video"){let v=document.createElement("video");v.src=url;v.controls=true;v.preload="metadata";card.append(v,downloadButton(url,item.name));$("memories").append(card)}else if(item.type==="music"){let a=document.createElement("audio");a.src=url;a.controls=true;a.preload="none";card.append(a,downloadButton(url,item.name));$("songs").append(card)}}catch(e){console.warn("Media load failed",e)}}))}
-function subscribeToMedia(){if(mediaSubscription)sb.removeChannel(mediaSubscription);mediaSubscription=sb.channel("love-media-"+coupleId).on("postgres_changes",{event:"*",schema:"public",table:"love_media",filter:"couple_id=eq."+coupleId},()=>{loadMedia();loadWallpaperChoices()}).subscribe()}
-async function uploadMemory(){let f=$("photoVideoFile").files[0],t=f&&fileKind(f);if(!f||!["photo","video"].includes(t))return say("mediaMsg","Choose a photo or video.");say("mediaMsg","Uploading…");$("uploadMemory").disabled=true;try{await uploadFile(f,t,"memoryProgress");$("photoVideoFile").value="";await loadMedia();say("mediaMsg","Memory added to your space.")}catch(e){say("mediaMsg",friendlyError(e))}finally{$("uploadMemory").disabled=false}}
-async function uploadMusic(){let f=$("musicFile").files[0];if(!f||fileKind(f)!=="music")return say("musicMsg","Choose an audio file.");say("musicMsg","Uploading song…");$("uploadMusic").disabled=true;try{await uploadFile(f,"music","musicProgress");$("musicFile").value="";await loadMedia();say("musicMsg","Song added to your library.")}catch(e){say("musicMsg",friendlyError(e))}finally{$("uploadMusic").disabled=false}}
+
+let sb,currentUser=null,coupleId=null,inviteCode=null,partnerUserId=null;
+let messageSubscription=null,settingsSubscription=null,boardSubscription=null,reelSubscription=null,mediaSubscription=null;
+let wallpaperObjectUrl=null,currentWallpaperPath=null;
+let currentNickname=localStorage.getItem(nicknameKey)||"";
+let messagesById=new Map(),renderedMessages=new Map(),hasLoadedMessages=false;
+let boardMode="draw",boardActive=null,boardStrokes=[];
+let installPromptEvent=null;
+
+function setView(v){
+ show("authView",v==="auth");
+ show("setupView",v==="setup");
+ show("appView",v==="app");
+}
+
+function friendlyError(e){
+ let m=e?.message||String(e||"Unknown error");
+ if(m.includes("Invalid login credentials"))return"Email or password is incorrect.";
+ if(m.includes("User already registered"))return"This email already has an account. Log in instead.";
+ if(m.includes("already belongs"))return"This account is already connected to a Love Space.";
+ if(m.includes("full")||m.includes("two members"))return"This Love Space already has two members.";
+ return m;
+}
+
+async function authAction(kind){
+ let email=$("email").value.trim(),password=$("password").value;
+ if(!email||password.length<8){
+  say("authMsg","Enter your email and a password with at least 8 characters.");
+  return;
+ }
+ say("authMsg",kind==="signup"?"Creating account…":"Logging in…");
+ try{
+  let r=kind==="signup"
+   ?await sb.auth.signUp({email,password})
+   :await sb.auth.signInWithPassword({email,password});
+  if(r.error)throw r.error;
+  if(kind==="signup"&&!r.data.session){
+   say("authMsg","Account created. Check your email to confirm it, then log in.");
+   return;
+  }
+  currentUser=r.data.user;
+  await continueAfterLogin();
+ }catch(e){say("authMsg",friendlyError(e))}
+}
+
+async function continueAfterLogin(){
+ let {data,error}=await sb.from("love_couple_members")
+  .select("couple_id").eq("user_id",currentUser.id).maybeSingle();
+ if(error){
+  setView("setup");
+  say("setupMsg",friendlyError(error));
+  return;
+ }
+ if(data?.couple_id){
+  coupleId=data.couple_id;
+  try{await loadSpace()}catch(e){setView("setup");say("setupMsg",friendlyError(e))}
+ }else{
+  $("nickname").value=currentNickname;
+  setView("setup");
+ }
+}
+
+async function createSpace(){
+ let name=$("nickname").value.trim();
+ if(!name)return say("setupMsg","Choose your name or nickname first.");
+ currentNickname=name.slice(0,25);
+ localStorage.setItem(nicknameKey,currentNickname);
+ say("setupMsg","Creating your universe…");
+ $("createBtn").disabled=true;
+ try{
+  let r=await sb.rpc("create_love_couple");
+  if(r.error)throw r.error;
+  let d=Array.isArray(r.data)?r.data[0]:r.data;
+  if(!d?.couple_id||!d?.invite_code)throw Error("The database did not return the new space details.");
+  coupleId=d.couple_id;
+  inviteCode=d.invite_code;
+  await loadSpace();
+ }catch(e){say("setupMsg",friendlyError(e))}
+ finally{$("createBtn").disabled=false}
+}
+
+async function joinSpace(){
+ let name=$("nickname").value.trim(),code=$("inviteInput").value.trim();
+ if(!name||!code)return say("setupMsg","Enter your nickname and invitation code.");
+ currentNickname=name.slice(0,25);
+ localStorage.setItem(nicknameKey,currentNickname);
+ say("setupMsg","Joining your universe…");
+ $("joinBtn").disabled=true;
+ try{
+  let r=await sb.rpc("join_love_couple",{p_invite_code:code});
+  if(r.error)throw r.error;
+  if(!r.data)throw Error("The database did not return a space ID.");
+  coupleId=typeof r.data==="string"?r.data:(r.data.couple_id||r.data.id);
+  if(!coupleId)throw Error("The database did not return a valid space ID.");
+  await loadSpace();
+ }catch(e){say("setupMsg",friendlyError(e))}
+ finally{$("joinBtn").disabled=false}
+}
+
+async function loadSpace(){
+ if(!coupleId)throw Error("Missing Love Space ID.");
+ let m=await sb.from("love_couple_members").select("user_id").eq("couple_id",coupleId);
+ if(m.error)throw m.error;
+ if(!m.data?.some(x=>x.user_id===currentUser.id))throw Error("This account is not a member of this Love Space.");
+ partnerUserId=m.data.find(x=>x.user_id!==currentUser.id)?.user_id||null;
+
+ let r=await sb.from("love_couples").select("name,invite_code").eq("id",coupleId).single();
+ if(r.error)throw r.error;
+
+ inviteCode=r.data.invite_code;
+ $("spaceTitle").textContent=r.data.name||"Our Universe";
+ $("inviteCode").textContent=inviteCode||"------";
+ setView("app");
+
+ hasLoadedMessages=false;
+ messagesById.clear();
+ renderedMessages.clear();
+
+ await Promise.all([
+  loadMessages(),loadMedia(),loadWallpaper(),loadBoard(),loadReels()
+ ]);
+
+ subscribeToMessages();
+ subscribeToSettings();
+ subscribeToBoard();
+ subscribeToReels();
+ subscribeToMedia();
+
+ await flushQueue();
+ updateNetwork();
+
+ if(new URLSearchParams(location.search).get("open")==="chat")switchTab("chatPanel");
+}
+
+function parseContent(raw){
+ try{return JSON.parse(raw)}
+ catch(_){return{nickname:"Partner",text:raw}}
+}
+
+async function loadMessages(){
+ let r=await sb.from("love_messages")
+  .select("id,user_id,content,created_at,edited_at,deleted_at,deleted_by")
+  .eq("couple_id",coupleId).order("created_at",{ascending:false}).limit(150);
+
+ if(r.error){say("chatMsg",friendlyError(r.error));return}
+
+ messagesById.clear();
+ (r.data||[]).reverse().forEach(x=>messagesById.set(x.id,x));
+ await renderMessages();
+ await markPartnerMessagesRead([...messagesById.values()]);
+}
+
+async function renderMessages(){
+ let box=$("messages");
+ let rows=[...messagesById.values()].sort((a,b)=>new Date(a.created_at)-new Date(b.created_at));
+ let near=box.scrollHeight-box.scrollTop-box.clientHeight<100;
+ let own=rows.filter(x=>x.user_id===currentUser.id&&!x.deleted_at).map(x=>x.id);
+ let read=new Set();
+
+ if(partnerUserId&&own.length){
+  let rr=await sb.from("love_message_receipts").select("message_id")
+   .eq("couple_id",coupleId).eq("reader_id",partnerUserId).in("message_id",own);
+  if(!rr.error)(rr.data||[]).forEach(x=>read.add(x.message_id));
+ }
+
+ let keep=new Set();
+
+ for(let row of rows){
+  keep.add(row.id);
+  let p=parseContent(row.content),mine=row.user_id===currentUser.id,isRead=read.has(row.id);
+  let sig=JSON.stringify([row.content,row.edited_at,row.deleted_at,row.created_at,isRead]);
+  let div=renderedMessages.get(row.id);
+
+  if(!div){
+   div=document.createElement("div");
+   renderedMessages.set(row.id,div);
+   box.append(div);
+  }
+
+  if(div.dataset.sig===sig)continue;
+  div.dataset.sig=sig;
+  div.className="bubble"+(mine?" mine":"")+(row.deleted_at?" deleted":"");
+
+  let head=document.createElement("small");
+  let name=document.createElement("span");
+  name.textContent=p.nickname||"Partner";
+  head.append(name);
+
+  if(row.edited_at&&!row.deleted_at){
+   let ed=document.createElement("span");
+   ed.textContent="edited";
+   head.append(ed);
+  }
+
+  if(mine&&!row.deleted_at){
+   let tick=document.createElement("span");
+   tick.className="ticks"+(isRead?" read":"");
+   tick.textContent=isRead?"✓✓":"✓";
+   head.append(tick);
+  }
+
+  let body=document.createElement("div");
+  body.className="body";
+  body.textContent=row.deleted_at?"This message was deleted":p.text||"";
+
+  let time=document.createElement("div");
+  time.className="pill";
+  time.style.marginTop="5px";
+  time.textContent=row.created_at?new Date(row.created_at).toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"}):"";
+
+  div.replaceChildren(head,body,time);
+
+  if(mine&&!row.deleted_at){
+   let tools=document.createElement("div");
+   tools.className="tools";
+
+   let edit=document.createElement("button");
+   edit.className="ghost";
+   edit.textContent="Edit";
+   edit.onclick=()=>editMessage(row);
+
+   let del=document.createElement("button");
+   del.className="ghost";
+   del.textContent="Delete";
+   del.onclick=()=>deleteMessage(row);
+
+   tools.append(edit,del);
+   div.append(tools);
+  }
+ }
+
+ for(let [id,node] of renderedMessages){
+  if(!keep.has(id)){
+   node.remove();
+   renderedMessages.delete(id);
+  }
+ }
+
+ if(!hasLoadedMessages||near)box.scrollTop=box.scrollHeight;
+ hasLoadedMessages=true;
+}
+
+async function editMessage(row){
+ let p=parseContent(row.content),next=prompt("Edit your message",p.text||"");
+ if(next===null)return;
+ next=next.trim();
+ if(!next)return alert("A message cannot be empty.");
+
+ let content=JSON.stringify({...p,text:next});
+ let r=await sb.from("love_messages").update({
+  content,edited_at:new Date().toISOString()
+ }).eq("id",row.id).eq("user_id",currentUser.id);
+
+ if(r.error)return say("chatMsg",friendlyError(r.error));
+ row.content=content;
+ row.edited_at=new Date().toISOString();
+ messagesById.set(row.id,row);
+ await renderMessages();
+ say("chatMsg","Message updated.");
+}
+
+async function deleteMessage(row){
+ if(!confirm("Delete this message for both of you?"))return;
+ let r=await sb.from("love_messages").update({
+  deleted_at:new Date().toISOString(),deleted_by:currentUser.id
+ }).eq("id",row.id).eq("user_id",currentUser.id);
+
+ if(r.error)return say("chatMsg",friendlyError(r.error));
+ row.deleted_at=new Date().toISOString();
+ row.deleted_by=currentUser.id;
+ messagesById.set(row.id,row);
+ await renderMessages();
+ say("chatMsg","Message deleted for both of you.");
+}
+
+function subscribeToMessages(){
+ if(messageSubscription)sb.removeChannel(messageSubscription);
+
+ messageSubscription=sb.channel("love-messages-"+coupleId)
+  .on("postgres_changes",{
+   event:"*",schema:"public",table:"love_messages",filter:"couple_id=eq."+coupleId
+  },async p=>{
+   if(p.eventType==="DELETE")messagesById.delete(p.old.id);
+   else messagesById.set(p.new.id,p.new);
+   await renderMessages();
+   if(p.new?.user_id!==currentUser.id)markPartnerMessagesRead([p.new]);
+  })
+  .on("postgres_changes",{
+   event:"*",schema:"public",table:"love_message_receipts",filter:"couple_id=eq."+coupleId
+  },()=>renderMessages())
+  .subscribe();
+}
+
+async function markPartnerMessagesRead(rows){
+ let unseen=rows.filter(x=>x.user_id!==currentUser.id&&!x.deleted_at);
+ if(!unseen.length||!navigator.onLine)return;
+
+ let data=unseen.map(x=>({
+  message_id:x.id,couple_id:coupleId,reader_id:currentUser.id
+ }));
+
+ let r=await sb.from("love_message_receipts")
+  .upsert(data,{onConflict:"message_id,reader_id",ignoreDuplicates:true});
+
+ if(r.error)console.warn("Read receipt:",r.error.message);
+}
+
+function pending(){
+ try{return JSON.parse(localStorage.getItem(queueKey+coupleId)||"[]")}
+ catch(_){return[]}
+}
+
+function savePending(q){
+ localStorage.setItem(queueKey+coupleId,JSON.stringify(q));
+}
+
+async function sendMessage(){
+ let text=$("messageInput").value.trim();
+ if(!text)return;
+
+ let content=JSON.stringify({nickname:currentNickname||"Partner",text});
+
+ if(!navigator.onLine){
+  let q=pending();
+  q.push({content,created_at:new Date().toISOString()});
+  savePending(q);
+  $("messageInput").value="";
+  say("chatMsg","Saved on this phone. It will send when you're online.");
+  return;
+ }
+
+ $("sendBtn").disabled=true;
+
+ try{
+  let r=await sb.from("love_messages").insert({
+   couple_id:coupleId,user_id:currentUser.id,content
+  }).select().single();
+
+  if(r.error)throw r.error;
+
+  messagesById.set(r.data.id,r.data);
+  await renderMessages();
+  $("messages").scrollTop=$("messages").scrollHeight;
+  $("messageInput").value="";
+  say("chatMsg","");
+  notifyPartner(text);
+
+ }catch(e){
+  if(!navigator.onLine){
+   let q=pending();
+   q.push({content,created_at:new Date().toISOString()});
+   savePending(q);
+   $("messageInput").value="";
+   say("chatMsg","Connection lost. Message saved to send later.");
+  }else say("chatMsg",friendlyError(e));
+ }finally{$("sendBtn").disabled=false}
+}
+
+async function flushQueue(){
+ if(!navigator.onLine||!coupleId)return;
+ let q=pending();
+ if(!q.length)return;
+
+ let left=[];
+
+ for(let i=0;i<q.length;i++){
+  let item=q[i];
+  let r=await sb.from("love_messages").insert({
+   couple_id:coupleId,user_id:currentUser.id,content:item.content
+  }).select().single();
+
+  if(r.error){
+   left=q.slice(i);
+   break;
+  }
+
+  notifyPartner(parseContent(item.content).text||"You have a new message");
+ }
+
+ savePending(left);
+
+ if(!left.length){
+  say("chatMsg","Your offline messages have been sent.");
+  await loadMessages();
+ }
+}
+
+function fileKind(f){
+ if(f.type.startsWith("image/"))return"photo";
+ if(f.type.startsWith("video/"))return"video";
+ if(f.type.startsWith("audio/"))return"music";
+ return null;
+}
+
+async function uploadFile(file,type,progressId){
+ if(!file)throw Error("Choose a file first.");
+ if(file.size>100*1024*1024)throw Error("Choose a file smaller than 100 MB.");
+
+ let ext=(file.name.split(".").pop()||"file")
+  .replace(/[^a-zA-Z0-9]/g,"").slice(0,10);
+
+ let path=coupleId+"/"+Date.now()+"-"+crypto.randomUUID()+"."+ext;
+ let bucket=type==="music"?"love-music":type==="photo"?"love-photos":"love-videos";
+
+ $(progressId).style.width="15%";
+
+ let u=await sb.storage.from(bucket).upload(path,file,{
+  upsert:false,contentType:file.type||"application/octet-stream"
+ });
+
+ if(u.error)throw u.error;
+
+ $(progressId).style.width="75%";
+
+ let r=await sb.from("love_media").insert({
+  couple_id:coupleId,user_id:currentUser.id,type,path,name:file.name
+ });
+
+ if(r.error)throw r.error;
+
+ $(progressId).style.width="100%";
+ setTimeout(()=>$(progressId).style.width="0",1200);
+}
+
+async function signedUrl(type,path){
+ let b=type==="music"?"love-music":type==="photo"?"love-photos":"love-videos";
+ let r=await sb.storage.from(b).createSignedUrl(path,3600);
+ if(r.error)throw r.error;
+ return r.data.signedUrl;
+}
+
+function downloadButton(url,name){
+ let a=document.createElement("a");
+ a.href=url;
+ a.download=name||"love-space-file";
+ a.target="_blank";
+ a.rel="noopener";
+ a.textContent="Download";
+ a.className="muted small";
+ a.style.display="block";
+ a.style.marginTop="8px";
+ return a;
+}
+
+async function loadMedia(){
+ let r=await sb.from("love_media")
+  .select("id,type,path,name,created_at")
+  .eq("couple_id",coupleId)
+  .order("created_at",{ascending:false}).limit(80);
+
+ if(r.error){
+  say("mediaMsg",friendlyError(r.error));
+  say("musicMsg",friendlyError(r.error));
+  return;
+ }
+
+ $("memories").replaceChildren();
+ $("songs").replaceChildren();
+
+ await Promise.all((r.data||[]).map(async item=>{
+  try{
+   let url=await signedUrl(item.type,item.path);
+   let card=document.createElement("div");
+   card.className="mediaItem";
+
+   let title=document.createElement("div");
+   title.className="small";
+   title.textContent=item.name||"Shared file";
+   card.append(title);
+
+   if(item.type==="photo"){
+    let img=document.createElement("img");
+    img.loading="lazy";
+    img.src=url;
+    img.alt=item.name||"Shared photo";
+    card.append(img,downloadButton(url,item.name));
+    $("memories").append(card);
+   }else if(item.type==="video"){
+    let v=document.createElement("video");
+    v.src=url;
+    v.controls=true;
+    v.preload="metadata";
+    card.append(v,downloadButton(url,item.name));
+    $("memories").append(card);
+   }else if(item.type==="music"){
+    let a=document.createElement("audio");
+    a.src=url;
+    a.controls=true;
+    a.preload="none";
+    card.append(a,downloadButton(url,item.name));
+    $("songs").append(card);
+   }
+  }catch(e){console.warn("Media load failed",e)}
+ }));
+}
+
+function subscribeToMedia(){
+ if(mediaSubscription)sb.removeChannel(mediaSubscription);
+ mediaSubscription=sb.channel("love-media-"+coupleId)
+  .on("postgres_changes",{
+   event:"*",schema:"public",table:"love_media",filter:"couple_id=eq."+coupleId
+  },()=>{loadMedia();loadWallpaperChoices()})
+  .subscribe();
+}
+
+async function uploadMemory(){
+ let f=$("photoVideoFile").files[0],t=f&&fileKind(f);
+ if(!f||!["photo","video"].includes(t))return say("mediaMsg","Choose a photo or video.");
+
+ say("mediaMsg","Uploading…");
+ $("uploadMemory").disabled=true;
+
+ try{
+  await uploadFile(f,t,"memoryProgress");
+  $("photoVideoFile").value="";
+  await loadMedia();
+  say("mediaMsg","Memory added to your space.");
+ }catch(e){say("mediaMsg",friendlyError(e))}
+ finally{$("uploadMemory").disabled=false}
+}
+
+async function uploadMusic(){
+ let f=$("musicFile").files[0];
+ if(!f||fileKind(f)!=="music")return say("musicMsg","Choose an audio file.");
+
+ say("musicMsg","Uploading song…");
+ $("uploadMusic").disabled=true;
+
+ try{
+  await uploadFile(f,"music","musicProgress");
+  $("musicFile").value="";
+  await loadMedia();
+  say("musicMsg","Song added to your library.");
+ }catch(e){say("musicMsg",friendlyError(e))}
+ finally{$("uploadMusic").disabled=false}
+}
+
 const WALL_CACHE="love-space-wallpapers-v1";
-function wallpaperCacheKey(path){return new Request(location.origin+"/__love_wallpaper__/"+encodeURIComponent(path))}
-async function cacheWallpaper(path,url){try{let response=await fetch(url,{mode:"cors",cache:"no-store"});if(!response.ok)throw Error("Wallpaper download failed.");let cache=await caches.open(WALL_CACHE);await cache.put(wallpaperCacheKey(path),response.clone());return await response.blob()}catch(e){console.warn("Wallpaper cache:",e);return null}}
-async function getWallpaperBlob(path){try{let cache=await caches.open(WALL_CACHE),hit=await cache.match(wallpaperCacheKey(path));return hit?await hit.blob():null}catch(_){return null}}
-function paintPhotoWallpaper(url,mode){document.body.classList.toggle("full-photo-mode",mode==="app");document.body.classList.toggle("chat-photo-mode",mode==="chat");document.body.style.backgroundImage=mode==="app"?`linear-gradient(#09070b88,#09070b99),url("${url}")`:"";document.body.style.backgroundSize=mode==="app"?"cover":"";document.body.style.backgroundPosition=mode==="app"?"center":"";document.body.style.backgroundAttachment=mode==="app"?"fixed":"";let box=$("messages");if(box){box.style.backgroundImage=mode==="chat"?`linear-gradient(#09070b88,#09070b88),url("${url}")`:"";box.style.backgroundSize=mode==="chat"?"cover":"";box.style.backgroundPosition=mode==="chat"?"center":""}}
-async function showSavedPhoto(path,mode){if(!path){clearPhotoStyles();return}let blob=await getWallpaperBlob(path);if(blob){if(wallpaperObjectUrl)URL.revokeObjectURL(wallpaperObjectUrl);wallpaperObjectUrl=URL.createObjectURL(blob);paintPhotoWallpaper(wallpaperObjectUrl,mode);return}if(!navigator.onLine){say("settingsMsg","This wallpaper is not cached on this phone yet. Connect once to save it for offline use.");return}try{let url=await signedUrl("photo",path),fresh=await cacheWallpaper(path,url);if(fresh){if(wallpaperObjectUrl)URL.revokeObjectURL(wallpaperObjectUrl);wallpaperObjectUrl=URL.createObjectURL(fresh);paintPhotoWallpaper(wallpaperObjectUrl,mode)}else paintPhotoWallpaper(url,mode)}catch(e){say("settingsMsg",friendlyError(e))}}
-function clearPhotoStyles(){if(wallpaperObjectUrl){URL.revokeObjectURL(wallpaperObjectUrl);wallpaperObjectUrl=null}document.body.classList.remove("full-photo-mode","chat-photo-mode");document.body.style.backgroundImage="";document.body.style.backgroundSize="";document.body.style.backgroundPosition="";document.body.style.backgroundAttachment="";let box=$("messages");if(box)box.style.backgroundImage=""}
-async function loadWallpaper(){let r=await sb.from("love_settings").select("wallpaper,wallpaper_path").eq("couple_id",coupleId).maybeSingle();if(r.error){say("settingsMsg",friendlyError(r.error));return}let v=r.data?.wallpaper||"galaxy",stored=r.data?.wallpaper_path||"",mode="chat",path=stored;if(stored.startsWith("app::")){mode="app";path=stored.slice(5)}else if(stored.startsWith("chat::")){mode="chat";path=stored.slice(6)}currentWallpaperPath=path||null;$("wallpaper").value=v;$("wallpaperMode").value=mode;if(path)await showSavedPhoto(path,mode);else{clearPhotoStyles();applyWallpaper(v)}await loadWallpaperChoices()}
-function applyWallpaper(v){let b={galaxy:"radial-gradient(circle at 15% 5%,#351326 0,transparent 34%),radial-gradient(circle at 90% 35%,#21143a 0,transparent 32%),#09070b",rose:"radial-gradient(circle at 20% 10%,#64233f 0,transparent 38%),radial-gradient(circle at 85% 35%,#35152d 0,transparent 38%),#100810",midnight:"radial-gradient(circle at 50% 0%,#182b4a 0,transparent 45%),#070a12",red:"radial-gradient(circle at 50% 0%,#631326 0,transparent 45%),#10070b"};document.body.style.background=b[v]||b.galaxy}
-async function loadWallpaperChoices(){let r=await sb.from("love_media").select("id,path,name,created_at").eq("couple_id",coupleId).eq("type","photo").order("created_at",{ascending:false}).limit(80);if(r.error)return;let select=$("sharedWallpaper"),selected=select.value;select.innerHTML='<option value="">Choose a shared photo…</option>';(r.data||[]).forEach(item=>{let o=document.createElement("option");o.value=item.path;o.textContent=item.name||"Shared photo";select.append(o)});if(selected&&[...select.options].some(o=>o.value===selected))select.value=selected;if(currentWallpaperPath)select.value=currentWallpaperPath}
-async function savePhotoWallpaper(){let file=$("wallpaperPhoto").files[0],path=$("sharedWallpaper").value,mode=$("wallpaperMode").value;say("settingsMsg","Saving shared photo wallpaper…");try{if(file){if(!file.type.startsWith("image/"))throw Error("Choose an image file.");if(file.size>20*1024*1024)throw Error("Choose an image smaller than 20 MB.");await uploadFile(file,"photo","memoryProgress");let q=await sb.from("love_media").select("path").eq("couple_id",coupleId).eq("user_id",currentUser.id).eq("type","photo").order("created_at",{ascending:false}).limit(1).single();if(q.error)throw q.error;path=q.data.path;$("wallpaperPhoto").value="";await loadMedia();await loadWallpaperChoices()}if(!path)throw Error("Choose a photo from your phone or Memories first.");let url=await signedUrl("photo",path),blob=await cacheWallpaper(path,url);if(blob){if(wallpaperObjectUrl)URL.revokeObjectURL(wallpaperObjectUrl);wallpaperObjectUrl=URL.createObjectURL(blob);paintPhotoWallpaper(wallpaperObjectUrl,mode)}else paintPhotoWallpaper(url,mode);let saved=await sb.from("love_settings").update({wallpaper_path:(mode==="app"?"app::":"chat::")+path,updated_at:new Date().toISOString()}).eq("couple_id",coupleId);if(saved.error)throw saved.error;currentWallpaperPath=path;say("settingsMsg","Shared photo wallpaper saved for both of you.")}catch(e){say("settingsMsg",friendlyError(e))}}
-async function clearPhotoWallpaper(){say("settingsMsg","Removing photo wallpaper…");try{let r=await sb.from("love_settings").update({wallpaper_path:null,updated_at:new Date().toISOString()}).eq("couple_id",coupleId);if(r.error)throw r.error;currentWallpaperPath=null;clearPhotoStyles();applyWallpaper($("wallpaper").value);say("settingsMsg","Photo wallpaper removed. Preset atmosphere restored.")}catch(e){say("settingsMsg",friendlyError(e))}}
-async function saveWallpaper(){let v=$("wallpaper").value;say("settingsMsg","Saving…");try{let r=await sb.from("love_settings").update({wallpaper:v,wallpaper_path:null,updated_at:new Date().toISOString()}).eq("couple_id",coupleId);if(r.error)throw r.error;currentWallpaperPath=null;clearPhotoStyles();applyWallpaper(v);say("settingsMsg","Shared atmosphere updated.")}catch(e){say("settingsMsg",friendlyError(e))}}
-function subscribeToSettings(){if(settingsSubscription)sb.removeChannel(settingsSubscription);settingsSubscription=sb.channel("love-settings-"+coupleId).on("postgres_changes",{event:"UPDATE",schema:"public",table:"love_settings",filter:"couple_id=eq."+coupleId},async p=>{let stored=p.new.wallpaper_path||"",mode=stored.startsWith("app::")?"app":"chat",path=stored.startsWith("app::")?stored.slice(5):stored.startsWith("chat::")?stored.slice(6):"";currentWallpaperPath=path||null;$("wallpaper").value=p.new.wallpaper||"galaxy";$("wallpaperMode").value=mode;if(path)await showSavedPhoto(path,mode);else{clearPhotoStyles();applyWallpaper($("wallpaper").value)}}).subscribe()}
-async function logout(){try{await sb.auth.signOut()}catch(e){console.warn(e)}currentUser=null;coupleId=null;inviteCode=null;for(let ch of [messageSubscription,settingsSubscription,boardSubscription,reelSubscription,mediaSubscription])if(ch)await sb.removeChannel(ch);messageSubscription=settingsSubscription=boardSubscription=reelSubscription=mediaSubscription=null;clearPhotoStyles();setView("auth")}
-function urlBase64ToUint8Array(v){const pad="=".repeat((4-v.length%4)%4),b=(v+pad).replace(/-/g,"+").replace(/_/g,"/"),raw=atob(b);return Uint8Array.from([...raw].map(c=>c.charCodeAt(0)))}
-async function enablePushNotifications(){let btn=$("enablePushBtn");btn.disabled=true;say("pushMsg","Setting up notifications…");try{if(!("serviceWorker"in navigator)||!("PushManager"in window)||!("Notification"in window))throw Error("This browser does not support app notifications. Install Love Space and try Chrome or Samsung Internet.");if(Notification.permission==="denied")throw Error("Notifications are blocked in your phone settings.");let perm=Notification.permission==="granted"?"granted":await Notification.requestPermission();if(perm!=="granted")throw Error("Notification permission was not allowed.");let reg=await navigator.serviceWorker.ready,sub=await reg.pushManager.getSubscription();if(!sub)sub=await reg.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:urlBase64ToUint8Array(PUSH_PUBLIC_KEY)});let saved=await sb.from("love_push_subscriptions").upsert({user_id:currentUser.id,couple_id:coupleId,subscription:sub.toJSON(),updated_at:new Date().toISOString()},{onConflict:"user_id,couple_id"});if(saved.error)throw saved.error;say("pushMsg","Notifications are enabled on this phone. ❤️");btn.textContent="Notifications enabled ✓"}catch(e){say("pushMsg",friendlyError(e))}finally{btn.disabled=false}}
-async function notifyPartner(messageText){if(!partnerUserId)return;try{let n=await sb.from("love_notifications").insert({couple_id:coupleId,sender_user_id:currentUser.id,recipient_user_id:partnerUserId,notification_type:"message",title:"Love Space ❤️",body:String(messageText).slice(0,140),data:{type:"chat"}}).select("id").single();if(n.error)throw n.error;let r=await sb.functions.invoke("love-push",{body:{notification_id:n.data.id}});if(r.error)console.warn("Push notification:",r.error.message)}catch(e){console.warn("Could not send push notification:",e)}}
-function boardDrawOne(item){let c=$("whiteboard"),ctx=c.getContext("2d"),d=item.stroke_data||{};if(d.type==="clear"){ctx.clearRect(0,0,c.width,c.height);return}if(d.type==="text"){ctx.fillStyle=d.color||"#e52d58";ctx.font=`${d.size||28}px system-ui`;ctx.fillText(d.text||"",(d.x||.08)*c.width,(d.y||.2)*c.height);return}let pts=d.points||[];if(!pts.length)return;ctx.strokeStyle=d.color||"#e52d58";ctx.lineWidth=d.width||5;ctx.lineCap="round";ctx.lineJoin="round";ctx.beginPath();ctx.moveTo(pts[0].x*c.width,pts[0].y*c.height);for(let i=1;i<pts.length;i++)ctx.lineTo(pts[i].x*c.width,pts[i].y*c.height);if(pts.length===1)ctx.lineTo(pts[0].x*c.width+.1,pts[0].y*c.height+.1);ctx.stroke()}
-function redrawBoard(){let c=$("whiteboard"),ctx=c.getContext("2d");ctx.clearRect(0,0,c.width,c.height);let last=-1;for(let i=0;i<boardStrokes.length;i++)if(boardStrokes[i].stroke_data?.type==="clear")last=i;boardStrokes.slice(last+1).forEach(boardDrawOne)}
-async function loadBoard(){let r=await sb.from("love_whiteboard_strokes").select("id,user_id,stroke_data,created_at").eq("couple_id",coupleId).order("created_at",{ascending:true}).limit(1000);if(r.error){say("boardMsg",friendlyError(r.error));return}boardStrokes=r.data||[];redrawBoard()}
-function subscribeToBoard(){if(boardSubscription)sb.removeChannel(boardSubscription);boardSubscription=sb.channel("love-board-"+coupleId).on("postgres_changes",{event:"INSERT",schema:"public",table:"love_whiteboard_strokes",filter:"couple_id=eq."+coupleId},p=>{if(!boardStrokes.some(x=>x.id===p.new.id)){boardStrokes.push(p.new);redrawBoard()}}).subscribe()}
-async function saveBoardStroke(stroke){let r=await sb.from("love_whiteboard_strokes").insert({couple_id:coupleId,user_id:currentUser.id,stroke_data:stroke}).select("id,user_id,stroke_data,created_at").single();if(r.error){say("boardMsg",friendlyError(r.error));return}if(!boardStrokes.some(x=>x.id===r.data.id)){boardStrokes.push(r.data);redrawBoard()}say("boardMsg","")}
-function setupBoard(){let c=$("whiteboard");c.addEventListener("pointerdown",e=>{if(boardMode==="text"){let text=$("boardText").value.trim();if(!text){say("boardMsg","Type a note first.");return}let r=c.getBoundingClientRect(),x=(e.clientX-r.left)/r.width,y=(e.clientY-r.top)/r.height;saveBoardStroke({type:"text",text,x,y,color:$("boardColor").value,size:28});$("boardText").value="";boardMode="draw";return}let r=c.getBoundingClientRect();boardActive={type:"path",color:$("boardColor").value,width:Number($("boardSize").value),points:[{x:(e.clientX-r.left)/r.width,y:(e.clientY-r.top)/r.height}]};c.setPointerCapture(e.pointerId)});c.addEventListener("pointermove",e=>{if(!boardActive)return;let r=c.getBoundingClientRect(),pt={x:(e.clientX-r.left)/r.width,y:(e.clientY-r.top)/r.height};boardActive.points.push(pt);let ctx=c.getContext("2d"),p=boardActive.points;ctx.strokeStyle=boardActive.color;ctx.lineWidth=boardActive.width;ctx.lineCap="round";ctx.beginPath();ctx.moveTo(p[p.length-2].x*c.width,p[p.length-2].y*c.height);ctx.lineTo(pt.x*c.width,pt.y*c.height);ctx.stroke()});let finish=()=>{if(boardActive){let s=boardActive;boardActive=null;saveBoardStroke(s)}};c.addEventListener("pointerup",finish);c.addEventListener("pointercancel",finish);$("boardTextMode").onclick=()=>{boardMode="text";say("boardMsg","Tap the whiteboard where your note should appear.")};$("boardDrawMode").onclick=()=>{boardMode="draw";say("boardMsg","Draw with your finger.")};$("boardClear").onclick=()=>{if(confirm("Clear the shared whiteboard for both of you?"))saveBoardStroke({type:"clear"})}}
-function reelEmbed(url){try{let u=new URL(url);if(!/(^|\.)instagram\.com$/i.test(u.hostname))return null;let m=u.pathname.match(/\/(reel|p|tv)\/([A-Za-z0-9_-]+)/);return m?`https://www.instagram.com/${m[1]}/${m[2]}/embed/`:null}catch(_){return null}}
-async function loadReels(){let r=await sb.from("love_reels").select("id,user_id,reel_url,caption,created_at").eq("couple_id",coupleId).order("created_at",{ascending:false}).limit(100);if(r.error){say("reelMsg",friendlyError(r.error));return}let box=$("reelsList");box.replaceChildren();for(let item of r.data||[]){let card=document.createElement("article");card.className="reel-card";let cap=document.createElement("p");cap.textContent=item.caption||"A reel for us ❤️";card.append(cap);let embed=reelEmbed(item.reel_url);if(embed){let frame=document.createElement("iframe");frame.src=embed;frame.loading="lazy";frame.allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share";frame.allowFullscreen=true;card.append(frame)}let link=document.createElement("a");link.href=item.reel_url;link.target="_blank";link.rel="noopener";link.textContent="Open Reel on Instagram";card.append(link);let share=document.createElement("button");share.className="secondary";share.style.width="100%";share.style.marginTop="9px";share.textContent="Share to our chat";share.onclick=()=>sendChatText("🎬 "+(item.caption?item.caption+" — ":"")+item.reel_url);card.append(share);box.append(card)}}
-async function addReel(){let url=$("reelUrl").value.trim(),caption=$("reelCaption").value.trim();if(!reelEmbed(url))return say("reelMsg","Paste a valid Instagram Reel, post or video link.");$("addReel").disabled=true;say("reelMsg","Saving Reel…");try{let r=await sb.from("love_reels").insert({couple_id:coupleId,user_id:currentUser.id,reel_url:url,caption}).select().single();if(r.error)throw r.error;$("reelUrl").value="";$("reelCaption").value="";await loadReels();say("reelMsg","Reel added to your shared space ❤️")}catch(e){say("reelMsg",friendlyError(e))}finally{$("addReel").disabled=false}}
-function subscribeToReels(){if(reelSubscription)sb.removeChannel(reelSubscription);reelSubscription=sb.channel("love-reels-"+coupleId).on("postgres_changes",{event:"*",schema:"public",table:"love_reels",filter:"couple_id=eq."+coupleId},loadReels).subscribe()}
-async function sendChatText(text){let content=JSON.stringify({nickname:currentNickname||"Partner",text}),r=await sb.from("love_messages").insert({couple_id:coupleId,user_id:currentUser.id,content}).select().single();if(r.error){say("reelMsg",friendlyError(r.error));return}messagesById.set(r.data.id,r.data);await renderMessages();$("messages").scrollTop=$("messages").scrollHeight;notifyPartner(text);switchTab("chatPanel")}
-function switchTab(id){["homePanel","chatPanel","mediaPanel","musicPanel","boardPanel","reelsPanel","settingsPanel"].forEach(x=>show(x,x===id));document.querySelectorAll("[data-tab]").forEach(b=>b.classList.toggle("secondary",b.dataset.tab!==id))}
-function setupInstall(){const btn=$("installAppBtn"),help=$("installHelp");if(window.matchMedia("(display-mode: standalone)").matches||navigator.standalone){btn.textContent="Love Space is installed ✓";btn.disabled=true;help.textContent="You're already using the installed app.";return}window.addEventListener("beforeinstallprompt",event=>{event.preventDefault();installPromptEvent=event;btn.hidden=false;help.textContent="Ready to install on this phone."});window.addEventListener("appinstalled",()=>{installPromptEvent=null;btn.textContent="Love Space is installed ✓";btn.disabled=true;help.textContent="You're ready. Welcome home."});btn.onclick=async()=>{if(installPromptEvent){installPromptEvent.prompt();let choice=await installPromptEvent.userChoice;installPromptEvent=null;if(choice?.outcome==="accepted"){btn.textContent="Love Space is installed ✓";btn.disabled=true;help.textContent="You're ready. Welcome home."}else help.textContent="Installation was cancelled. You can try again from your browser menu.";return}help.textContent="To install: open your browser menu (⋮ or ☰), then choose Install app or Add to Home screen. If that option is missing, open this page in Chrome or Samsung Internet and try again."}}
-function updateNetwork(){let online=navigator.onLine;$("netState").textContent=online?"● Online":"● Offline";$("netState").className=online?"pill online":"pill offline";if(online)flushQueue()}
-async function init(){setupInstall();if("serviceWorker"in navigator)navigator.serviceWorker.register("./sw.js",{updateViaCache:"none"}).then(reg=>reg.update()).catch(e=>console.warn("Service worker registration failed",e));if(!window.supabase){setView("auth");say("authMsg","Supabase library did not load. Check your internet connection and reload.");return}sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);$("loginBtn").onclick=()=>authAction("login");$("signupBtn").onclick=()=>authAction("signup");$("createBtn").onclick=createSpace;$("joinBtn").onclick=joinSpace;$("sendBtn").onclick=sendMessage;$("enablePushBtn").onclick=enablePushNotifications;$("addReel").onclick=addReel;setupBoard();$("messageInput").addEventListener("keydown",e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();sendMessage()}});$("uploadMemory").onclick=uploadMemory;$("uploadMusic").onclick=uploadMusic;$("saveWallpaper").onclick=saveWallpaper;$("savePhotoWallpaper").onclick=savePhotoWallpaper;$("clearPhotoWallpaper").onclick=clearPhotoWallpaper;$("wallpaper").onchange=e=>{if(!currentWallpaperPath)applyWallpaper(e.target.value)};$("wallpaperMode").onchange=()=>{if(currentWallpaperPath)showSavedPhoto(currentWallpaperPath,$("wallpaperMode").value)};$("refreshBtn").onclick=loadMessages;$("copyCode").onclick=async()=>{try{await navigator.clipboard.writeText(inviteCode||"");$("copyCode").textContent="Copied!";setTimeout(()=>$("copyCode").textContent="Copy code",1500)}catch(_){say("settingsMsg","Select and copy the invitation code.")}};$("logoutBtn").onclick=logout;$("logoutSetup").onclick=logout;document.querySelectorAll("[data-tab]").forEach(b=>b.onclick=()=>switchTab(b.dataset.tab));document.querySelectorAll("[data-go]").forEach(b=>b.onclick=()=>switchTab(b.dataset.go));window.addEventListener("online",updateNetwork);window.addEventListener("offline",updateNetwork);let r=await sb.auth.getSession();if(r.error){setView("auth");say("authMsg",friendlyError(r.error));return}if(r.data.session){currentUser=r.data.session.user;await continueAfterLogin()}else setView("auth");sb.auth.onAuthStateChange((event,session)=>{if(event==="SIGNED_OUT"){currentUser=null;coupleId=null;setView("auth")}else if(session&&!currentUser){currentUser=session.user;setTimeout(()=>continueAfterLogin(),0)}});updateNetwork()}
+
+function wallpaperCacheKey(path){
+ return new Request(location.origin+"/__love_wallpaper__/"+encodeURIComponent(path));
+}
+
+async function cacheWallpaper(path,url){
+ try{
+  let response=await fetch(url,{mode:"cors",cache:"no-store"});
+  if(!response.ok)throw Error("Wallpaper download failed.");
+  let cache=await caches.open(WALL_CACHE);
+  await cache.put(wallpaperCacheKey(path),response.clone());
+  return await response.blob();
+ }catch(e){
+  console.warn("Wallpaper cache:",e);
+  return null;
+ }
+}
+
+async function getWallpaperBlob(path){
+ try{
+  let cache=await caches.open(WALL_CACHE);
+  let hit=await cache.match(wallpaperCacheKey(path));
+  return hit?await hit.blob():null;
+ }catch(_){return null}
+}
+
+function paintPhotoWallpaper(url,mode){
+ document.body.classList.toggle("full-photo-mode",mode==="app");
+ document.body.classList.toggle("chat-photo-mode",mode==="chat");
+ document.body.style.backgroundImage=mode==="app"
+  ?`linear-gradient(#09070b88,#09070b99),url("${url}")`:"";
+ document.body.style.backgroundSize=mode==="app"?"cover":"";
+ document.body.style.backgroundPosition=mode==="app"?"center":"";
+ document.body.style.backgroundAttachment=mode==="app"?"fixed":"";
+
+ let box=$("messages");
+ if(box){
+  box.style.backgroundImage=mode==="chat"
+   ?`linear-gradient(#09070b88,#09070b88),url("${url}")`:"";
+  box.style.backgroundSize=mode==="chat"?"cover":"";
+  box.style.backgroundPosition=mode==="chat"?"center":"";
+ }
+}
+
+async function showSavedPhoto(path,mode){
+ if(!path){clearPhotoStyles();return}
+
+ let blob=await getWallpaperBlob(path);
+
+ if(blob){
+  if(wallpaperObjectUrl)URL.revokeObjectURL(wallpaperObjectUrl);
+  wallpaperObjectUrl=URL.createObjectURL(blob);
+  paintPhotoWallpaper(wallpaperObjectUrl,mode);
+  return;
+ }
+
+ if(!navigator.onLine){
+  say("settingsMsg","This wallpaper is not cached on this phone yet. Connect once to save it for offline use.");
+  return;
+ }
+
+ try{
+  let url=await signedUrl("photo",path);
+  let fresh=await cacheWallpaper(path,url);
+
+  if(fresh){
+   if(wallpaperObjectUrl)URL.revokeObjectURL(wallpaperObjectUrl);
+   wallpaperObjectUrl=URL.createObjectURL(fresh);
+   paintPhotoWallpaper(wallpaperObjectUrl,mode);
+  }else paintPhotoWallpaper(url,mode);
+
+ }catch(e){say("settingsMsg",friendlyError(e))}
+}
+
+function clearPhotoStyles(){
+ if(wallpaperObjectUrl){
+  URL.revokeObjectURL(wallpaperObjectUrl);
+  wallpaperObjectUrl=null;
+ }
+
+ document.body.classList.remove("full-photo-mode","chat-photo-mode");
+ document.body.style.backgroundImage="";
+ document.body.style.backgroundSize="";
+ document.body.style.backgroundPosition="";
+ document.body.style.backgroundAttachment="";
+
+ let box=$("messages");
+ if(box)box.style.backgroundImage="";
+}
+
+async function loadWallpaper(){
+ let r=await sb.from("love_settings")
+  .select("wallpaper,wallpaper_path")
+  .eq("couple_id",coupleId).maybeSingle();
+
+ if(r.error){
+  say("settingsMsg",friendlyError(r.error));
+  return;
+ }
+
+ let v=r.data?.wallpaper||"galaxy";
+ let stored=r.data?.wallpaper_path||"";
+ let mode="chat",path=stored;
+
+ if(stored.startsWith("app::")){
+  mode="app";
+  path=stored.slice(5);
+ }else if(stored.startsWith("chat::")){
+  mode="chat";
+  path=stored.slice(6);
+ }
+
+ currentWallpaperPath=path||null;
+ $("wallpaper").value=v;
+ $("wallpaperMode").value=mode;
+
+ if(path)await showSavedPhoto(path,mode);
+ else{
+  clearPhotoStyles();
+  applyWallpaper(v);
+ }
+
+ await loadWallpaperChoices();
+}
+
+function applyWallpaper(v){
+ let b={
+  galaxy:"radial-gradient(circle at 15% 5%,#351326 0,transparent 34%),radial-gradient(circle at 90% 35%,#21143a 0,transparent 32%),#09070b",
+  rose:"radial-gradient(circle at 20% 10%,#64233f 0,transparent 38%),radial-gradient(circle at 85% 35%,#35152d 0,transparent 38%),#100810",
+  midnight:"radial-gradient(circle at 50% 0%,#182b4a 0,transparent 45%),#070a12",
+  red:"radial-gradient(circle at 50% 0%,#631326 0,transparent 45%),#10070b"
+ };
+ document.body.style.background=b[v]||b.galaxy;
+}
+
+async function loadWallpaperChoices(){
+ let r=await sb.from("love_media")
+  .select("id,path,name,created_at")
+  .eq("couple_id",coupleId).eq("type","photo")
+  .order("created_at",{ascending:false}).limit(80);
+
+ if(r.error)return;
+
+ let select=$("sharedWallpaper"),selected=select.value;
+ select.innerHTML='<option value="">Choose a shared photo…</option>';
+
+ (r.data||[]).forEach(item=>{
+  let o=document.createElement("option");
+  o.value=item.path;
+  o.textContent=item.name||"Shared photo";
+  select.append(o);
+ });
+
+ if(selected&&[...select.options].some(o=>o.value===selected))select.value=selected;
+ if(currentWallpaperPath)select.value=currentWallpaperPath;
+}
+
+async function savePhotoWallpaper(){
+ let file=$("wallpaperPhoto").files[0];
+ let path=$("sharedWallpaper").value;
+ let mode=$("wallpaperMode").value;
+
+ say("settingsMsg","Saving shared photo wallpaper…");
+
+ try{
+  if(file){
+   if(!file.type.startsWith("image/"))throw Error("Choose an image file.");
+   if(file.size>20*1024*1024)throw Error("Choose an image smaller than 20 MB.");
+
+   await uploadFile(file,"photo","memoryProgress");
+
+   let q=await sb.from("love_media").select("path")
+    .eq("couple_id",coupleId).eq("user_id",currentUser.id)
+    .eq("type","photo").order("created_at",{ascending:false})
+    .limit(1).single();
+
+   if(q.error)throw q.error;
+
+   path=q.data.path;
+   $("wallpaperPhoto").value="";
+   await loadMedia();
+   await loadWallpaperChoices();
+  }
+
+  if(!path)throw Error("Choose a photo from your phone or Memories first.");
+
+  let url=await signedUrl("photo",path);
+  let blob=await cacheWallpaper(path,url);
+
+  if(blob){
+   if(wallpaperObjectUrl)URL.revokeObjectURL(wallpaperObjectUrl);
+   wallpaperObjectUrl=URL.createObjectURL(blob);
+   paintPhotoWallpaper(wallpaperObjectUrl,mode);
+  }else paintPhotoWallpaper(url,mode);
+
+  let saved=await sb.from("love_settings").upsert({
+   couple_id:coupleId,
+   wallpaper:$("wallpaper").value,
+   wallpaper_path:(mode==="app"?"app::":"chat::")+path,
+   updated_at:new Date().toISOString()
+  },{onConflict:"couple_id"});
+
+  if(saved.error)throw saved.error;
+
+  currentWallpaperPath=path;
+  say("settingsMsg","Shared photo wallpaper saved for both of you. ❤️");
+
+ }catch(e){say("settingsMsg",friendlyError(e))}
+}
+
+async function clearPhotoWallpaper(){
+ say("settingsMsg","Removing photo wallpaper…");
+
+ try{
+  let r=await sb.from("love_settings").upsert({
+   couple_id:coupleId,
+   wallpaper:$("wallpaper").value,
+   wallpaper_path:null,
+   updated_at:new Date().toISOString()
+  },{onConflict:"couple_id"});
+
+  if(r.error)throw r.error;
+
+  currentWallpaperPath=null;
+  clearPhotoStyles();
+  applyWallpaper($("wallpaper").value);
+  say("settingsMsg","Photo wallpaper removed. Preset atmosphere restored.");
+
+ }catch(e){say("settingsMsg",friendlyError(e))}
+}
+
+async function saveWallpaper(){
+ let v=$("wallpaper").value;
+ say("settingsMsg","Saving…");
+
+ try{
+  let r=await sb.from("love_settings").upsert({
+   couple_id:coupleId,
+   wallpaper:v,
+   wallpaper_path:null,
+   updated_at:new Date().toISOString()
+  },{onConflict:"couple_id"});
+
+  if(r.error)throw r.error;
+
+  currentWallpaperPath=null;
+  clearPhotoStyles();
+  applyWallpaper(v);
+  say("settingsMsg","Shared atmosphere updated. ❤️");
+
+ }catch(e){say("settingsMsg",friendlyError(e))}
+}
+
+function subscribeToSettings(){
+ if(settingsSubscription)sb.removeChannel(settingsSubscription);
+
+ settingsSubscription=sb.channel("love-settings-"+coupleId)
+  .on("postgres_changes",{
+   event:"*",schema:"public",table:"love_settings",filter:"couple_id=eq."+coupleId
+  },async p=>{
+   let row=p.new;
+   if(!row)return;
+
+   let stored=row.wallpaper_path||"";
+   let mode=stored.startsWith("app::")?"app":"chat";
+   let path=stored.startsWith("app::")?stored.slice(5):
+    stored.startsWith("chat::")?stored.slice(6):"";
+
+   currentWallpaperPath=path||null;
+   $("wallpaper").value=row.wallpaper||"galaxy";
+   $("wallpaperMode").value=mode;
+
+   if(path)await showSavedPhoto(path,mode);
+   else{
+    clearPhotoStyles();
+    applyWallpaper($("wallpaper").value);
+   }
+  }).subscribe();
+}
+
+async function logout(){
+ try{await sb.auth.signOut()}catch(e){console.warn(e)}
+
+ currentUser=null;
+ coupleId=null;
+ inviteCode=null;
+ partnerUserId=null;
+
+ for(let ch of [
+  messageSubscription,settingsSubscription,boardSubscription,reelSubscription,mediaSubscription
+ ]){
+  if(ch)await sb.removeChannel(ch);
+ }
+
+ messageSubscription=settingsSubscription=boardSubscription=reelSubscription=mediaSubscription=null;
+ clearPhotoStyles();
+ setView("auth");
+}
+
+function urlBase64ToUint8Array(v){
+ const pad="=".repeat((4-v.length%4)%4);
+ const b=(v+pad).replace(/-/g,"+").replace(/_/g,"/");
+ const raw=atob(b);
+ return Uint8Array.from([...raw].map(c=>c.charCodeAt(0)));
+}
+
+async function enablePushNotifications(){
+ let btn=$("enablePushBtn");
+ btn.disabled=true;
+ say("pushMsg","Setting up notifications…");
+
+ try{
+  if(!("serviceWorker"in navigator)||!("PushManager"in window)||!("Notification"in window)){
+   throw Error("This browser does not support app notifications. Install Love Space and try Chrome or Samsung Internet.");
+  }
+
+  if(Notification.permission==="denied"){
+   throw Error("Notifications are blocked in your phone settings.");
+  }
+
+  let perm=Notification.permission==="granted"
+   ?"granted":await Notification.requestPermission();
+
+  if(perm!=="granted")throw Error("Notification permission was not allowed.");
+
+  let reg=await navigator.serviceWorker.ready;
+  let sub=await reg.pushManager.getSubscription();
+
+  if(!sub){
+   sub=await reg.pushManager.subscribe({
+    userVisibleOnly:true,
+    applicationServerKey:urlBase64ToUint8Array(PUSH_PUBLIC_KEY)
+   });
+  }
+
+  let saved=await sb.from("love_push_subscriptions").upsert({
+   user_id:currentUser.id,
+   couple_id:coupleId,
+   subscription:sub.toJSON(),
+   updated_at:new Date().toISOString()
+  },{onConflict:"user_id,couple_id"});
+
+  if(saved.error)throw saved.error;
+
+  say("pushMsg","Notifications are enabled on this phone. ❤️");
+  btn.textContent="Notifications enabled ✓";
+
+ }catch(e){say("pushMsg",friendlyError(e))}
+ finally{btn.disabled=false}
+}
+
+/* Push function creates the notification record itself.
+   Do not insert a second record from the app. */
+async function notifyPartner(messageText){
+ if(!partnerUserId||!coupleId||!navigator.onLine)return;
+
+ try{
+  let r=await sb.functions.invoke("love-push-final",{
+   body:{
+    couple_id:coupleId,
+    recipient_user_id:partnerUserId,
+    body:String(messageText).trim().slice(0,500),
+    title:"Love Space ❤️"
+   }
+  });
+
+  if(r.error)throw r.error;
+  if(r.data?.error)console.warn("Push notification:",r.data.error);
+
+ }catch(e){
+  console.warn("Could not send push notification:",e);
+ }
+}
+
+/* Shared whiteboard uses the confirmed love_canvas_strokes table. */
+function boardDrawOne(item){
+ let c=$("whiteboard"),ctx=c.getContext("2d"),d=item.stroke_data||{};
+
+ if(d.type==="clear"){
+  ctx.clearRect(0,0,c.width,c.height);
+  return;
+ }
+
+ if(d.type==="text"){
+  ctx.fillStyle=d.color||"#e52d58";
+  ctx.font=`${d.size||28}px system-ui`;
+  ctx.fillText(d.text||"",(d.x||.08)*c.width,(d.y||.2)*c.height);
+  return;
+ }
+
+ let pts=d.points||[];
+ if(!pts.length)return;
+
+ ctx.strokeStyle=d.color||"#e52d58";
+ ctx.lineWidth=d.width||5;
+ ctx.lineCap="round";
+ ctx.lineJoin="round";
+ ctx.beginPath();
+ ctx.moveTo(pts[0].x*c.width,pts[0].y*c.height);
+
+ for(let i=1;i<pts.length;i++){
+  ctx.lineTo(pts[i].x*c.width,pts[i].y*c.height);
+ }
+
+ if(pts.length===1){
+  ctx.lineTo(pts[0].x*c.width+.1,pts[0].y*c.height+.1);
+ }
+
+ ctx.stroke();
+}
+
+function redrawBoard(){
+ let c=$("whiteboard"),ctx=c.getContext("2d");
+ ctx.clearRect(0,0,c.width,c.height);
+
+ let last=-1;
+ for(let i=0;i<boardStrokes.length;i++){
+  if(boardStrokes[i].stroke_data?.type==="clear")last=i;
+ }
+
+ boardStrokes.slice(last+1).forEach(boardDrawOne);
+}
+
+async function loadBoard(){
+ let r=await sb.from("love_canvas_strokes")
+  .select("id,user_id,stroke_data,created_at")
+  .eq("couple_id",coupleId)
+  .order("created_at",{ascending:true}).limit(1000);
+
+ if(r.error){
+  say("boardMsg",friendlyError(r.error));
+  return;
+ }
+
+ boardStrokes=r.data||[];
+ redrawBoard();
+}
+
+function subscribeToBoard(){
+ if(boardSubscription)sb.removeChannel(boardSubscription);
+
+ boardSubscription=sb.channel("love-board-"+coupleId)
+  .on("postgres_changes",{
+   event:"INSERT",schema:"public",table:"love_canvas_strokes",
+   filter:"couple_id=eq."+coupleId
+  },p=>{
+   if(!boardStrokes.some(x=>x.id===p.new.id)){
+    boardStrokes.push(p.new);
+    redrawBoard();
+   }
+  }).subscribe();
+}
+
+async function saveBoardStroke(stroke){
+ let r=await sb.from("love_canvas_strokes").insert({
+  couple_id:coupleId,
+  user_id:currentUser.id,
+  stroke_data:stroke
+ }).select("id,user_id,stroke_data,created_at").single();
+
+ if(r.error){
+  say("boardMsg",friendlyError(r.error));
+  return;
+ }
+
+ if(!boardStrokes.some(x=>x.id===r.data.id)){
+  boardStrokes.push(r.data);
+  redrawBoard();
+ }
+
+ say("boardMsg","");
+}
+
+function setupBoard(){
+ let c=$("whiteboard");
+
+ c.addEventListener("pointerdown",e=>{
+  if(boardMode==="text"){
+   let text=$("boardText").value.trim();
+   if(!text){
+    say("boardMsg","Type a note first.");
+    return;
+   }
+
+   let r=c.getBoundingClientRect();
+   let x=(e.clientX-r.left)/r.width;
+   let y=(e.clientY-r.top)/r.height;
+
+   saveBoardStroke({
+    type:"text",text,x,y,color:$("boardColor").value,size:28
+   });
+
+   $("boardText").value="";
+   boardMode="draw";
+   return;
+  }
+
+  let r=c.getBoundingClientRect();
+
+  boardActive={
+   type:"path",
+   color:$("boardColor").value,
+   width:Number($("boardSize").value),
+   points:[{
+    x:(e.clientX-r.left)/r.width,
+    y:(e.clientY-r.top)/r.height
+   }]
+  };
+
+  c.setPointerCapture(e.pointerId);
+ });
+
+ c.addEventListener("pointermove",e=>{
+  if(!boardActive)return;
+
+  let r=c.getBoundingClientRect();
+  let pt={
+   x:(e.clientX-r.left)/r.width,
+   y:(e.clientY-r.top)/r.height
+  };
+
+  boardActive.points.push(pt);
+
+  let ctx=c.getContext("2d"),p=boardActive.points;
+  ctx.strokeStyle=boardActive.color;
+  ctx.lineWidth=boardActive.width;
+  ctx.lineCap="round";
+  ctx.beginPath();
+  ctx.moveTo(p[p.length-2].x*c.width,p[p.length-2].y*c.height);
+  ctx.lineTo(pt.x*c.width,pt.y*c.height);
+  ctx.stroke();
+ });
+
+ let finish=()=>{
+  if(boardActive){
+   let s=boardActive;
+   boardActive=null;
+   saveBoardStroke(s);
+  }
+ };
+
+ c.addEventListener("pointerup",finish);
+ c.addEventListener("pointercancel",finish);
+
+ $("boardTextMode").onclick=()=>{
+  boardMode="text";
+  say("boardMsg","Tap the whiteboard where your note should appear.");
+ };
+
+ $("boardDrawMode").onclick=()=>{
+  boardMode="draw";
+  say("boardMsg","Draw with your finger.");
+ };
+
+ $("boardClear").onclick=()=>{
+  if(confirm("Clear the shared whiteboard for both of you?")){
+   saveBoardStroke({type:"clear"});
+  }
+ };
+}
+
+function reelEmbed(url){
+ try{
+  let u=new URL(url);
+  if(!/(^|\.)instagram\.com$/i.test(u.hostname))return null;
+  let m=u.pathname.match(/\/(reel|p|tv)\/([A-Za-z0-9_-]+)/);
+  return m?`https://www.instagram.com/${m[1]}/${m[2]}/embed/`:null;
+ }catch(_){return null}
+}
+
+async function loadReels(){
+ let r=await sb.from("love_reels")
+  .select("id,user_id,reel_url,caption,created_at")
+  .eq("couple_id",coupleId)
+  .order("created_at",{ascending:false}).limit(100);
+
+ if(r.error){
+  say("reelMsg",friendlyError(r.error));
+  return;
+ }
+
+ let box=$("reelsList");
+ box.replaceChildren();
+
+ for(let item of r.data||[]){
+  let card=document.createElement("article");
+  card.className="reel-card";
+
+  let cap=document.createElement("p");
+  cap.textContent=item.caption||"A reel for us ❤️";
+  card.append(cap);
+
+  let embed=reelEmbed(item.reel_url);
+
+  if(embed){
+   let frame=document.createElement("iframe");
+   frame.src=embed;
+   frame.loading="lazy";
+   frame.allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share";
+   frame.allowFullscreen=true;
+   card.append(frame);
+  }
+
+  let link=document.createElement("a");
+  link.href=item.reel_url;
+  link.target="_blank";
+  link.rel="noopener";
+  link.textContent="Open Reel on Instagram";
+  card.append(link);
+
+  let share=document.createElement("button");
+  share.className="secondary";
+  share.style.width="100%";
+  share.style.marginTop="9px";
+  share.textContent="Share to our chat";
+  share.onclick=()=>sendChatText("🎬 "+(item.caption?item.caption+" — ":"")+item.reel_url);
+  card.append(share);
+
+  box.append(card);
+ }
+}
+
+async function addReel(){
+ let url=$("reelUrl").value.trim();
+ let caption=$("reelCaption").value.trim();
+
+ if(!reelEmbed(url)){
+  return say("reelMsg","Paste a valid Instagram Reel, post or video link.");
+ }
+
+ $("addReel").disabled=true;
+ say("reelMsg","Saving Reel…");
+
+ try{
+  let r=await sb.from("love_reels").insert({
+   couple_id:coupleId,user_id:currentUser.id,reel_url:url,caption
+  }).select().single();
+
+  if(r.error)throw r.error;
+
+  $("reelUrl").value="";
+  $("reelCaption").value="";
+  await loadReels();
+  say("reelMsg","Reel added to your shared space ❤️");
+
+ }catch(e){say("reelMsg",friendlyError(e))}
+ finally{$("addReel").disabled=false}
+}
+
+function subscribeToReels(){
+ if(reelSubscription)sb.removeChannel(reelSubscription);
+
+ reelSubscription=sb.channel("love-reels-"+coupleId)
+  .on("postgres_changes",{
+   event:"*",schema:"public",table:"love_reels",filter:"couple_id=eq."+coupleId
+  },loadReels).subscribe();
+}
+
+async function sendChatText(text){
+ let content=JSON.stringify({nickname:currentNickname||"Partner",text});
+
+ let r=await sb.from("love_messages").insert({
+  couple_id:coupleId,user_id:currentUser.id,content
+ }).select().single();
+
+ if(r.error){
+  say("reelMsg",friendlyError(r.error));
+  return;
+ }
+
+ messagesById.set(r.data.id,r.data);
+ await renderMessages();
+ $("messages").scrollTop=$("messages").scrollHeight;
+ notifyPartner(text);
+ switchTab("chatPanel");
+}
+
+function switchTab(id){
+ [
+  "homePanel","chatPanel","mediaPanel","musicPanel",
+  "boardPanel","reelsPanel","settingsPanel"
+ ].forEach(x=>show(x,x===id));
+
+ document.querySelectorAll("[data-tab]").forEach(b=>{
+  b.classList.toggle("secondary",b.dataset.tab!==id);
+ });
+}
+
+function setupInstall(){
+ const btn=$("installAppBtn"),help=$("installHelp");
+
+ if(window.matchMedia("(display-mode: standalone)").matches||navigator.standalone){
+  btn.textContent="Love Space is installed ✓";
+  btn.disabled=true;
+  help.textContent="You're already using the installed app.";
+  return;
+ }
+
+ window.addEventListener("beforeinstallprompt",event=>{
+  event.preventDefault();
+  installPromptEvent=event;
+  btn.hidden=false;
+  help.textContent="Ready to install on this phone.";
+ });
+
+ window.addEventListener("appinstalled",()=>{
+  installPromptEvent=null;
+  btn.textContent="Love Space is installed ✓";
+  btn.disabled=true;
+  help.textContent="You're ready. Welcome home.";
+ });
+
+ btn.onclick=async()=>{
+  if(installPromptEvent){
+   installPromptEvent.prompt();
+   let choice=await installPromptEvent.userChoice;
+   installPromptEvent=null;
+
+   if(choice?.outcome==="accepted"){
+    btn.textContent="Love Space is installed ✓";
+    btn.disabled=true;
+    help.textContent="You're ready. Welcome home.";
+   }else{
+    help.textContent="Installation was cancelled. You can try again from your browser menu.";
+   }
+   return;
+  }
+
+  help.textContent="To install: open your browser menu (⋮ or ☰), then choose Install app or Add to Home screen. If that option is missing, open this page in Chrome or Samsung Internet and try again.";
+ };
+}
+
+function updateNetwork(){
+ let online=navigator.onLine;
+ $("netState").textContent=online?"● Online":"● Offline";
+ $("netState").className=online?"pill online":"pill offline";
+ if(online)flushQueue();
+}
+
+async function init(){
+ setupInstall();
+
+ if("serviceWorker"in navigator){
+  navigator.serviceWorker.register("./sw.js",{updateViaCache:"none"})
+   .then(reg=>reg.update())
+   .catch(e=>console.warn("Service worker registration failed",e));
+ }
+
+ if(!window.supabase){
+  setView("auth");
+  say("authMsg","Supabase library did not load. Check your internet connection and reload.");
+  return;
+ }
+
+ sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+
+ $("loginBtn").onclick=()=>authAction("login");
+ $("signupBtn").onclick=()=>authAction("signup");
+ $("createBtn").onclick=createSpace;
+ $("joinBtn").onclick=joinSpace;
+ $("sendBtn").onclick=sendMessage;
+ $("enablePushBtn").onclick=enablePushNotifications;
+ $("addReel").onclick=addReel;
+
+ setupBoard();
+
+ $("messageInput").addEventListener("keydown",e=>{
+  if(e.key==="Enter"&&!e.shiftKey){
+   e.preventDefault();
+   sendMessage();
+  }
+ });
+
+ $("uploadMemory").onclick=uploadMemory;
+ $("uploadMusic").onclick=uploadMusic;
+ $("saveWallpaper").onclick=saveWallpaper;
+ $("savePhotoWallpaper").onclick=savePhotoWallpaper;
+ $("clearPhotoWallpaper").onclick=clearPhotoWallpaper;
+
+ $("wallpaper").onchange=e=>{
+  if(!currentWallpaperPath)applyWallpaper(e.target.value);
+ };
+
+ $("wallpaperMode").onchange=()=>{
+  if(currentWallpaperPath)showSavedPhoto(currentWallpaperPath,$("wallpaperMode").value);
+ };
+
+ $("refreshBtn").onclick=loadMessages;
+
+ $("copyCode").onclick=async()=>{
+  try{
+   await navigator.clipboard.writeText(inviteCode||"");
+   $("copyCode").textContent="Copied!";
+   setTimeout(()=>$("copyCode").textContent="Copy code",1500);
+  }catch(_){
+   say("settingsMsg","Select and copy the invitation code.");
+  }
+ };
+
+ $("logoutBtn").onclick=logout;
+ $("logoutSetup").onclick=logout;
+
+ document.querySelectorAll("[data-tab]").forEach(b=>{
+  b.onclick=()=>switchTab(b.dataset.tab);
+ });
+
+ document.querySelectorAll("[data-go]").forEach(b=>{
+  b.onclick=()=>switchTab(b.dataset.go);
+ });
+
+ window.addEventListener("online",updateNetwork);
+ window.addEventListener("offline",updateNetwork);
+
+ let r=await sb.auth.getSession();
+
+ if(r.error){
+  setView("auth");
+  say("authMsg",friendlyError(r.error));
+  return;
+ }
+
+ if(r.data.session){
+  currentUser=r.data.session.user;
+  try{await continueAfterLogin()}
+  catch(e){setView("auth");say("authMsg",friendlyError(e))}
+ }else{
+  setView("auth");
+ }
+
+ sb.auth.onAuthStateChange((event,session)=>{
+  if(event==="SIGNED_OUT"){
+   currentUser=null;
+   coupleId=null;
+   setView("auth");
+  }else if(session&&!currentUser){
+   currentUser=session.user;
+   setTimeout(()=>continueAfterLogin(),0);
+  }
+ });
+
+ updateNetwork();
+}
+
 init();
 </script>
 </body>
